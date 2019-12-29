@@ -84,7 +84,9 @@ const ChatRoomsScreen = ({ navigation, user }) => {
     <>
       <Container>
         <Header>
-          <Left />
+          <Left>
+            <Thumbnail source={{ uri: user.photoUrl }} style={{ width: 25, height: 25 }} />
+          </Left>
           <Body>
             <Title>Chat Rooms</Title>
           </Body>
