@@ -1,0 +1,44 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "react-native/react-native": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "plugins": [
+        "react",
+        "react-native",
+        "react-hooks"
+    ],
+    "rules": {
+        "no-use-before-define": ["error", { "functions": true, "classes": true, "variables": false }],
+        "global-require": 0,
+        "max-len": 0,
+        "react-hooks/rules-of-hooks": 2,
+        "react-hooks/exhaustive-deps": 1,
+        "import/prefer-default-export": 1,
+        "react/prop-types": 0,
+        "react/state-in-constructor": 0,
+        "react/jsx-filename-extension": 0,
+        "react-native/no-unused-styles": 2,
+        "react-native/split-platform-components": 2,
+        "react-native/no-inline-styles": 2,
+        "react-native/no-color-literals": 2,
+        "react-native/no-raw-text": 2,
+        "react-native/no-single-element-style-arrays": 2
+        
+    }
+}
