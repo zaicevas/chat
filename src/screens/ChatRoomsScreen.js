@@ -1,5 +1,5 @@
 import {
- Body, Container, Content, Header, Left, List, ListItem, Right, Text, Thumbnail, Title 
+ Body, Button, Container, Content, Header, Left, List, ListItem, Right, Text, Thumbnail, Title 
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { SCREEN_CHAT } from '../constants/Screens';
@@ -44,12 +44,20 @@ const ChatRoomsScreen = ({ navigation, user }) => {
   useEffect(() => {
     console.log('Calling backend to fetch chat rooms');
   });
+  const createNewChatRoom = () => console.log('Create new chat room');
+
   return (
     <Container>
       <Header>
+        <Left />
         <Body>
           <Title>Chat Rooms</Title>
         </Body>
+        <Right>
+          <Button hasText transparent onPress={createNewChatRoom}>
+            <Text>New</Text>
+          </Button>
+        </Right>
       </Header>
       <Content>
         <ChatRooms chatRooms={[INITIAL_CHAT_ROOMS, INITIAL_CHAT_ROOMS]} navigation={navigation} user={user} />

@@ -6,6 +6,16 @@ import { toGiftedChatUser } from '../helper/Parse';
 
 const MOCK_MESSAGES = [
   {
+    _id: 2,
+    text: 'Random message',
+    createdAt: new Date(),
+    user: {
+      _id: 3,
+      name: 'React Native',
+      avatar: 'https://placeimg.com/140/140/any',
+    },
+  },
+  {
     _id: 1,
     text: 'Chat room created by Tomas Zaicevas',
     createdAt: new Date(),
@@ -15,16 +25,6 @@ const MOCK_MESSAGES = [
       avatar: 'https://placeimg.com/140/140/any',
     },
     system: true,
-  },
-  {
-    _id: 2,
-    text: 'Random message',
-    createdAt: new Date(),
-    user: {
-      _id: 3,
-      name: 'React Native',
-      avatar: 'https://placeimg.com/140/140/any',
-    },
   },
 ];
 
