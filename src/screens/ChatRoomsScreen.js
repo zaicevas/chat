@@ -2,7 +2,9 @@ import {
  Body, Button, Container, Content, Header, Left, List, ListItem, Right, Text, Thumbnail, Title 
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import {
+ ActivityIndicator, Alert, StyleSheet, View 
+} from 'react-native';
 import Dialog from 'react-native-dialog';
 import { SCREEN_CHAT } from '../constants/Screens';
 
@@ -44,7 +46,9 @@ const LOCKED_TIMESTAMP = '???';
 
 const isUserPresentInChatRoom = (user, chatRoom) => chatRoom.participants.some((participant) => participant.id === user.id) || chatRoom.creator.id === user.id;
 
-const ChatRooms = ({ chatRooms, navigation, user }) => (
+const ChatRooms = ({
+  chatRooms, navigation, user, onSendRequest,
+}) => (
   <List>
     {chatRooms.map((chatRoom) => {
       const isUserParticipating = isUserPresentInChatRoom(user, chatRoom);
@@ -60,7 +64,18 @@ const ChatRooms = ({ chatRooms, navigation, user }) => (
           avatar
           onPress={isUserParticipating
             ? () => navigation.navigate(SCREEN_CHAT, { title: chatRoom.title, user })
-            : () => alert('Nop')}
+            : () => Alert.alert(
+              'Private chat room',
+              'You are not a part of this chat room. Do you want to send a request to join?',
+              [
+                {
+                  text: 'Cancel',
+                  style: 'cancel',
+                },
+                { text: 'OK', onPress: () => onSendRequest(user, chatRoom) },
+              ],
+              { cancelable: false },
+            )}
         >
           <Left>
             <Thumbnail source={{ uri: chatRoom.creator.photoUrl }} style={{ width: 40, height: 40 }} />
@@ -118,6 +133,10 @@ const ChatRoomsScreen = ({ navigation, user }) => {
     setIsNewChatRoomCreated(true);
   };
 
+  const onSendRequest = (user, chatRoom) => {
+    console.log(`Sending request from ${  user.email  } to chatRoom ${  chatRoom.title}`);
+  };
+
   if (!isLoaded || !isNewChatRoomCreated) {
     return (
       <Container>
@@ -158,7 +177,7 @@ const ChatRoomsScreen = ({ navigation, user }) => {
           </Right>
         </Header>
         <Content>
-          <ChatRooms chatRooms={chatRooms} navigation={navigation} user={user} />
+          <ChatRooms chatRooms={chatRooms} navigation={navigation} user={user} onSendRequest={onSendRequest} />
         </Content>
       </Container>
       <NewChatRoomDialog visible={visibleDialog} setVisible={setVisibleDialog} onCreateChatRoom={createNewChatRoom} />
