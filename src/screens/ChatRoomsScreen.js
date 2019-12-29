@@ -2,9 +2,10 @@ import {
  Body, Button, Container, Content, Header, Left, List, ListItem, Right, Text, Thumbnail, Title 
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
+import Dialog from 'react-native-dialog';
 import { SCREEN_CHAT } from '../constants/Screens';
 
-const INITIAL_CHAT_ROOMS = {
+const INITIAL_CHAT_ROOM = {
   id: 0,
   title: 'TITLE_CHAT_ROOM',
   latestMessage: 'LATEST_MESSAGE',
@@ -39,30 +40,66 @@ const ChatRooms = ({ chatRooms, navigation, user }) => (
   </List>
 );
 
+const NewChatRoomDialog = ({ visible, setVisible, onCreateChatRoom }) => {
+  const [input, setInput] = useState('');
+  const onCancel = () => setVisible(false);
+  const onCreate = () => {
+    onCreateChatRoom(input);
+    setVisible(false);
+  };
+  return (
+    <Dialog.Container visible={visible} onBackdropPress={onCancel}>
+      <Dialog.Title>Enter title</Dialog.Title>
+      <Dialog.Input placeholder="Title" onChangeText={(text) => setInput(text)} />
+      <Dialog.Button label="Cancel" onPress={onCancel} />
+      <Dialog.Button label="OK" onPress={onCreate} />
+    </Dialog.Container>
+  );
+};
+
 const ChatRoomsScreen = ({ navigation, user }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isNewChatRoomCreated, setIsNewChatRoomCreated] = useState(true);
+
   const [chatRooms, setChatRooms] = useState([]);
   useEffect(() => {
     console.log('Calling backend to fetch chat rooms');
-  });
-  const createNewChatRoom = () => console.log('Create new chat room');
+    const fetchedChatRooms = [INITIAL_CHAT_ROOM];
+    setChatRooms(fetchedChatRooms);
+    setIsLoaded(true);
+  }, []);
+
+  const [visibleDialog, setVisibleDialog] = useState(false);
+
+  const onNewChatRoomPress = () => setVisibleDialog(true);
+  const createNewChatRoom = async (title) => {
+    setIsNewChatRoomCreated(false);
+    console.log(`Calling backend to create new chat room with title ${title} .AWAIT`);
+    const newChatRoom = INITIAL_CHAT_ROOM;
+    setChatRooms([...chatRooms, newChatRoom]);
+    setIsNewChatRoomCreated(true);
+  };
 
   return (
-    <Container>
-      <Header>
-        <Left />
-        <Body>
-          <Title>Chat Rooms</Title>
-        </Body>
-        <Right>
-          <Button hasText transparent onPress={createNewChatRoom}>
-            <Text>New</Text>
-          </Button>
-        </Right>
-      </Header>
-      <Content>
-        <ChatRooms chatRooms={[INITIAL_CHAT_ROOMS, INITIAL_CHAT_ROOMS]} navigation={navigation} user={user} />
-      </Content>
-    </Container>
+    <>
+      <Container>
+        <Header>
+          <Left />
+          <Body>
+            <Title>Chat Rooms</Title>
+          </Body>
+          <Right>
+            <Button hasText transparent onPress={onNewChatRoomPress}>
+              <Text>New</Text>
+            </Button>
+          </Right>
+        </Header>
+        <Content>
+          <ChatRooms chatRooms={chatRooms} navigation={navigation} user={user} />
+        </Content>
+      </Container>
+      <NewChatRoomDialog visible={visibleDialog} setVisible={setVisibleDialog} onCreateChatRoom={createNewChatRoom} />
+    </>
   );
 };
 
