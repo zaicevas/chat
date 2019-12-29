@@ -11,6 +11,7 @@ const INITIAL_CHAT_ROOM = {
   latestMessage: 'LATEST_MESSAGE',
   latestMessageTime: '3:43 pm',
   createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
+  participants: [],
   creator: {
     id: 0,
     name: 'Tomas Zaicevas',
@@ -50,7 +51,7 @@ const NewChatRoomDialog = ({ visible, setVisible, onCreateChatRoom }) => {
   return (
     <Dialog.Container visible={visible} onBackdropPress={onCancel}>
       <Dialog.Title>Enter title</Dialog.Title>
-      <Dialog.Input placeholder="Title" onChangeText={(text) => setInput(text)} />
+      <Dialog.Input autoFocus placeholder="Title" onChangeText={(text) => setInput(text)} />
       <Dialog.Button label="Cancel" onPress={onCancel} />
       <Dialog.Button label="OK" onPress={onCreate} />
     </Dialog.Container>

@@ -1,7 +1,9 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import SystemMessage from '../components/SystemMessage';
+import Colors from '../constants/Colors';
 import { toGiftedChatUser } from '../helper/Parse';
 
 const MOCK_MESSAGES = [
@@ -17,7 +19,7 @@ const MOCK_MESSAGES = [
   },
   {
     _id: 1,
-    text: 'Chat room created by Tomas Zaicevas',
+    text: 'Chat room created by tozaicevas@gmail.com',
     createdAt: new Date(),
     user: {
       _id: 2,
@@ -52,6 +54,7 @@ const ChatScreen = ({ navigation }) => {
 
 ChatScreen.navigationOptions = ({ navigation }) => ({
   title: navigation.getParam('title', 'Chat'),
+  headerRight: () => (<MaterialIcons name="add-circle" size={28} style={{ paddingRight: 12 }} color={Colors.emerald} />),
 });
 
 export default ChatScreen;
