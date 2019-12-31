@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class WebSocketRequest {
-    private String messageType;
+    private String requestType;
     private User user;
     private int chatRoomId;
     private Message message;
