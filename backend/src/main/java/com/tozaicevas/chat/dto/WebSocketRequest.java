@@ -1,5 +1,7 @@
 package com.tozaicevas.chat.dto;
 
+import com.tozaicevas.chat.model.Message;
+import com.tozaicevas.chat.model.User;
 import lombok.Data;
 
 @Data

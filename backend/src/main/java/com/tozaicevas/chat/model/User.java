@@ -1,5 +1,6 @@
 package com.tozaicevas.chat.model;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +18,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class User {
     @Id
+    @SerializedName(value = "_id", alternate = "id")
     private String id;
 
     private String name;
-    private String givenName;
-    private String familyName;
-    private String photoUrl;
-    private String email;
+    private String avatar;
 
     @OneToMany
     private Set<Message> messages;

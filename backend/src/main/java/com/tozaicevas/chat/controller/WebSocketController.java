@@ -23,20 +23,14 @@ import java.util.stream.Stream;
 public class WebSocketController extends TextWebSocketHandler {
     private Set<WebSocketSession> sessions = new HashSet<>();
     private final WebSocketHandler webSocketHandler;
-    private final MessageRepository messageRepository;
-    private final ChatRoomRepository chatRoomRepository;
 
-    public WebSocketController(WebSocketHandler webSocketHandler, MessageRepository messageRepository, ChatRoomRepository chatRoomRepository) {
+    public WebSocketController(WebSocketHandler webSocketHandler) {
         this.webSocketHandler = webSocketHandler;
-        this.messageRepository = messageRepository;
-        this.chatRoomRepository = chatRoomRepository;
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         log.info("New WebSocket connection: " + session.getRemoteAddress().toString());
-        List<Message> msgs = messageRepository.findAll();
-        List<ChatRoom> rooms = chatRoomRepository.findAll();
         sessions = Stream.concat(sessions.stream(), Stream.of(session))
                 .collect(Collectors.toSet());
     }

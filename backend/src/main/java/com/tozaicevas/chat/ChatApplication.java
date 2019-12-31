@@ -4,6 +4,7 @@ import com.tozaicevas.chat.model.ChatRoom;
 import com.tozaicevas.chat.model.Message;
 import com.tozaicevas.chat.model.User;
 import com.tozaicevas.chat.repository.ChatRoomRepository;
+import com.tozaicevas.chat.repository.ChatRoomRequestRepository;
 import com.tozaicevas.chat.repository.MessageRepository;
 import com.tozaicevas.chat.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -19,11 +20,13 @@ public class ChatApplication {
 	}
 
 	@Bean
-	public CommandLineRunner cmd(MessageRepository msgRepository, UserRepository userRepository, ChatRoomRepository chatRoomRepository) {
+	public CommandLineRunner cmd(MessageRepository msgRepository, UserRepository userRepository,
+								 ChatRoomRepository chatRoomRepository, ChatRoomRequestRepository chatRoomRequestRepository) {
 		return args -> {
+/*
 			User user = User.builder()
 					.id("MYAI23123D")
-					.email("ha@gmail.com")
+					.name("ha@gmail.com")
 					.build();
 			Message msg = Message.builder()
 					.text("message text v2")
@@ -33,10 +36,13 @@ public class ChatApplication {
 					.creator(user)
 					.title("My chatroom")
 					.build();
-
-			userRepository.save(user);
-			msgRepository.save(msg);
-			chatRoomRepository.save(room);
+*/
+/*
+			msgRepository.deleteAll();
+			chatRoomRepository.deleteAll();
+			chatRoomRequestRepository.deleteAll();
+			userRepository.deleteAll();
+*/
 		};
 	}
 }

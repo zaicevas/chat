@@ -2,6 +2,11 @@ package com.tozaicevas.chat.controller;
 
 import com.tozaicevas.chat.dto.WebSocketRequest;
 import com.tozaicevas.chat.dto.WebSocketRequestType;
+import com.tozaicevas.chat.model.User;
+import com.tozaicevas.chat.repository.ChatRoomRepository;
+import com.tozaicevas.chat.repository.ChatRoomRequestRepository;
+import com.tozaicevas.chat.repository.MessageRepository;
+import com.tozaicevas.chat.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -15,14 +20,31 @@ public class WebSocketHandler {
     private Map<WebSocketSession, String> userToSession = new HashMap<>();
     private Map<String, Integer> userToChatRoom = new HashMap<>();
 
+    private ChatRoomRepository chatRoomRepository;
+    private ChatRoomRequestRepository chatRoomRequestRepository;
+    private MessageRepository messageRepository;
+    private UserRepository userRepository;
+
+    public WebSocketHandler(ChatRoomRepository chatRoomRepository,
+                            ChatRoomRequestRepository chatRoomRequestRepository,
+                            MessageRepository messageRepository,
+                            UserRepository userRepository) {
+
+        this.chatRoomRepository = chatRoomRepository;
+        this.chatRoomRequestRepository = chatRoomRequestRepository;
+        this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
+    }
+
     public void handleRequest(WebSocketRequest request, WebSocketSession session) {
         String requestType = request.getRequestType();
         switch (requestType) {
             case WebSocketRequestType.SAY_HELLO:
                 // map user to session and add user to db
-                String userId = request.getUser().getId();
-                userToSession.put(session, userId);
-                log.info(String.format("Added user (id %s) to session (id %s)", userId, session.getId()));
+                User user = request.getUser();
+                userToSession.put(session, user.getId());
+                userRepository.save(user);
+                log.info(String.format("Added user (id %s) to session (id %s)", user.getId(), session.getId()));
                 break;
             case WebSocketRequestType.GET_CHAT_ROOMS:
                 // query db for all chat rooms and return them

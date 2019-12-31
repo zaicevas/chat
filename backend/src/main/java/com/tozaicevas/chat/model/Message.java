@@ -1,5 +1,6 @@
 package com.tozaicevas.chat.model;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.Date;
 public class Message {
     @Id
     @GeneratedValue
+    @SerializedName(value = "_id", alternate = "id")
     private int id;
 
     @OneToOne
