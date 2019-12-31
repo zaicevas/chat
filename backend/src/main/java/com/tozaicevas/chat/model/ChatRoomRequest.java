@@ -13,17 +13,18 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message {
+public class ChatRoomRequest {
     @Id
     @GeneratedValue
     private int id;
 
-    @OneToOne
+    @ManyToOne
     private ChatRoom chatRoom;
 
-    private String text;
-    private Date createdAt;
-
-    @ManyToOne
+    @OneToOne
     private User user;
+
+    private Date createAt;
+    private String status;
+    private boolean seen;
 }

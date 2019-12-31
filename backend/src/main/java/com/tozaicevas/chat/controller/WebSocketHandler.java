@@ -57,6 +57,12 @@ public class WebSocketHandler {
             case WebSocketRequestType.DECLINE_REQUEST_TO_JOIN_CHAT_ROOM:
                 // update the request record in db to be accepted, and send notification to the declined user
                 break;
+            case WebSocketRequestType.GET_REQUESTS_TO_JOIN_CHAT_ROOM:
+                // return all requests for chat rooms that have been created by the user
+                break;
+            case WebSocketRequestType.GET_UNSEEN_REQUEST_RESULTS:
+                // return all results from requests that have been created by the user
+                break;
         }
     }
 

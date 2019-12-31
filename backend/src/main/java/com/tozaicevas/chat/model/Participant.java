@@ -6,24 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Message {
+@AllArgsConstructor
+public class Participant {
     @Id
     @GeneratedValue
     private int id;
 
-    @OneToOne
-    private ChatRoom chatRoom;
-
-    private String text;
-    private Date createdAt;
-
     @ManyToOne
     private User user;
+
+    @OneToOne
+    private ChatRoom chatRoom;
 }
