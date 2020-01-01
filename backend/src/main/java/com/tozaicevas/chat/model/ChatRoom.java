@@ -25,12 +25,12 @@ public class ChatRoom {
     @OneToOne
     private Message lastMessage;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<Message> messages;
 
     @OneToOne
     private User creator;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<User> participants;
 }

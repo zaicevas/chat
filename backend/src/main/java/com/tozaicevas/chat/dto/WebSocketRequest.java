@@ -10,4 +10,5 @@ public class WebSocketRequest {
     private User user;
     private int chatRoomId;
     private Message message;
+    private String chatRoomTitle;
 }

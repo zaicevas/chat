@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.Set;
@@ -24,9 +25,9 @@ public class User {
     private String name;
     private String avatar;
 
-    @OneToMany
-    private Set<Message> messages;
+    @OneToMany(fetch = FetchType.EAGER)
+    private transient Set<Message> messages;
 
-    @OneToMany
-    private Set<ChatRoom> chatRoomsOwned;
+    @OneToMany(fetch = FetchType.EAGER)
+    private transient Set<ChatRoom> chatRoomsOwned;
 }

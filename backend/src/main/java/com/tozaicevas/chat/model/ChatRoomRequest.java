@@ -19,10 +19,10 @@ public class ChatRoomRequest {
     private int id;
 
     @ManyToOne
-    private ChatRoom chatRoom;
+    private transient ChatRoom chatRoom;
 
     @OneToOne
-    private User user;
+    private transient User user;
 
     private Date createAt;
     private String status;

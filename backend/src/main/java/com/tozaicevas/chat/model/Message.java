@@ -20,12 +20,13 @@ public class Message {
     @SerializedName(value = "_id", alternate = "id")
     private int id;
 
-    @OneToOne
-    private ChatRoom chatRoom;
-
     private String text;
     private Date createdAt;
 
     @ManyToOne
     private User user;
+
+    @OneToOne
+    private transient ChatRoom chatRoom;
+
 }
