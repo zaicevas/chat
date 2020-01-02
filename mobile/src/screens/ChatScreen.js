@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import SystemMessage from '../components/SystemMessage';
 import Colors from '../constants/Colors';
@@ -68,7 +68,6 @@ const ChatScreen = ({ navigation }) => {
         user={user}
         renderUsernameOnMessage
       />
-      {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />}
     </View>
   );
 };

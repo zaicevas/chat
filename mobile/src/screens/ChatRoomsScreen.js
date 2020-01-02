@@ -20,9 +20,10 @@ import WebSocketClient from '../helper/WebSocketClient';
 
 const LOCKED_MESSAGE = '???';
 
-const isUserPresentInChatRoom = (user, chatRoom) =>
+/* const isUserPresentInChatRoom = (user, chatRoom) =>
   chatRoom.participants.some(participant => participant._id === user._id) ||
-  chatRoom.creator._id === user._id;
+  chatRoom.creator._id === user._id; */
+const isUserPresentInChatRoom = () => true;
 
 const ChatRooms = ({ chatRooms, navigation, user, onSendRequest }) => (
   <List>
@@ -119,8 +120,6 @@ const NewChatRoomDialog = ({ visible, setVisible, onCreateChatRoom }) => {
 const ChatRoomsScreen = ({ navigation, user }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isNewChatRoomCreated, setIsNewChatRoomCreated] = useState(true);
-  console.log('USER: ');
-  console.log(user);
 
   const [chatRooms, setChatRooms] = useState([]);
 

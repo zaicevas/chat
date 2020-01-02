@@ -29,20 +29,21 @@ public class WebSocketHandler {
     private Map<WebSocketSession, String> sessionToUser = new HashMap<>();
     private Map<String, Integer> userToChatRoom = new HashMap<>();
 
-    private ChatRoomRepository chatRoomRepository;
-    private ChatRoomRequestRepository chatRoomRequestRepository;
-    private MessageRepository messageRepository;
-    private UserRepository userRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomRequestRepository chatRoomRequestRepository;
+    private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
+    private final Gson gson;
 
     public WebSocketHandler(ChatRoomRepository chatRoomRepository,
                             ChatRoomRequestRepository chatRoomRequestRepository,
-                            MessageRepository messageRepository,
-                            UserRepository userRepository) {
-
+                            MessageRepository messageRepository, UserRepository userRepository,
+                            Gson gson) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatRoomRequestRepository = chatRoomRequestRepository;
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
+        this.gson = gson;
     }
 
     public void handleRequest(WebSocketRequest request, WebSocketSession session, Set<WebSocketSession> sessions) throws IOException {
@@ -62,7 +63,7 @@ public class WebSocketHandler {
                         .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
                         .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
                         .build();
-                String chatRooms = new Gson().toJson(response);
+                String chatRooms = gson.toJson(response);
                 session.sendMessage(new TextMessage(chatRooms));
                 log.info(String.format("Sent chat rooms to user (id: %s)", sessionToUser.get(session)));
                 break;
@@ -92,7 +93,7 @@ public class WebSocketHandler {
                         .responseType(WebSocketResponseType.ALL_CHAT)
                         .messages(chatMessages)
                         .build();
-                TextMessage json = new TextMessage(new Gson().toJson(response));
+                TextMessage json = new TextMessage(gson.toJson(response));
                 session.sendMessage(json);
                 log.info(String.format("Chat (id: %d) sent to user (id: %s)", chatRoomId, sessionToUser.get(session)));
                 break;
@@ -116,7 +117,7 @@ public class WebSocketHandler {
                                             .responseType(WebSocketResponseType.UPDATE_CHAT)
                                             .message(dbMessage)
                                             .build();
-                                    TextMessage newMessageJson = new TextMessage(new Gson().toJson(response));
+                                    TextMessage newMessageJson = new TextMessage(gson.toJson(response));
                                     Map<String, Integer> subscribedSessions = userToChatRoom.entrySet().stream()
                                             .filter(entry -> entry.getValue() == request.getChatRoomId())
                                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -128,7 +129,7 @@ public class WebSocketHandler {
                                             .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
                                             .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
                                             .build();
-                                    TextMessage allChatRoomsJson = new TextMessage(new Gson().toJson(getChatRooms));
+                                    TextMessage allChatRoomsJson = new TextMessage(gson.toJson(getChatRooms));
                                     chatRoom.getParticipants().stream()
                                             .filter(participant -> sessionToUser.values().contains(participant.getId()))
                                             .forEach(UtilException.rethrowConsumer(participant -> sessionToUser.entrySet().stream()
@@ -156,7 +157,7 @@ public class WebSocketHandler {
                         .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
                         .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
                         .build();
-                String chatRooms = new Gson().toJson(response);
+                String chatRooms = gson.toJson(response);
                 TextMessage responseString = new TextMessage(chatRooms);
                 // special class with responseType needed to specify purpose of the message
                 sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(responseString)));
