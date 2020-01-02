@@ -119,6 +119,8 @@ const NewChatRoomDialog = ({ visible, setVisible, onCreateChatRoom }) => {
 const ChatRoomsScreen = ({ navigation, user }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isNewChatRoomCreated, setIsNewChatRoomCreated] = useState(true);
+  console.log('USER: ');
+  console.log(user);
 
   const [chatRooms, setChatRooms] = useState([]);
 
@@ -139,9 +141,6 @@ const ChatRoomsScreen = ({ navigation, user }) => {
     setIsNewChatRoomCreated(false);
     console.log(`Calling server to create new chat room with title ${title}`);
     WebSocketClient.createChatRoom(title);
-    // const newChatRoom = INITIAL_CHAT_ROOMS[0];
-    // setChatRooms([...chatRooms, newChatRoom]);
-    //setIsNewChatRoomCreated(true);
   };
 
   const onSendRequest = (user, chatRoom) => {
@@ -156,7 +155,7 @@ const ChatRoomsScreen = ({ navigation, user }) => {
         <Header>
           <Left>
             <Thumbnail
-              source={{ uri: user.photoUrl }}
+              source={{ uri: user.avatar }}
               style={{ width: 25, height: 25 }}
             />
           </Left>
@@ -182,7 +181,7 @@ const ChatRoomsScreen = ({ navigation, user }) => {
         <Header>
           <Left>
             <Thumbnail
-              source={{ uri: user.photoUrl }}
+              source={{ uri: user.avatar }}
               style={{ width: 25, height: 25 }}
             />
           </Left>
