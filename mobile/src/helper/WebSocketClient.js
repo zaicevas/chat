@@ -21,6 +21,10 @@ class WebSocketClient {
     };
   }
 
+  send(req) {
+    this.client.send(JSON.stringify(req));
+  }
+
   sayHello() {
     const req = {
       requestType: 'SAY_HELLO',
@@ -34,12 +38,24 @@ class WebSocketClient {
     const req = {
       requestType: 'GET_CHAT_ROOMS'
     };
-    this.client.send(JSON.stringify(req));
+    this.send(req);
     this.log('GET_CHAT_ROOMS');
+  }
+
+  createChatRoom(title) {
+    const req = {
+      requestType: 'CREATE_CHAT_ROOM',
+      chatRoomTitle: title,
+      user: this.user
+    };
+    this.send(req);
+    this.log('CREATE_CHAT_ROOM');
   }
 
   onResponse = response => {
     const data = JSON.parse(response.data);
+    console.log('Received from the server: ');
+    console.log(response.data);
     if (data.responseType === 'ALL_CHAT_ROOMS') {
       this.onFetchedChatRooms(data.chatRooms);
     }

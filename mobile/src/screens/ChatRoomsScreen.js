@@ -186,27 +186,27 @@ const ChatRoomsScreen = ({ navigation, user }) => {
     WebSocketClient.onFetchedChatRooms = chatRooms => {
       console.log('Received chat rooms from server:');
       console.log(chatRooms);
-      setChatRooms(chatRooms);
+      setChatRooms(chatRooms.reverse());
       setIsLoaded(true);
+      setIsNewChatRoomCreated(true);
     };
   }, []);
 
   const [visibleDialog, setVisibleDialog] = useState(false);
 
   const onNewChatRoomPress = () => setVisibleDialog(true);
-  const createNewChatRoom = async title => {
+  const createNewChatRoom = title => {
     setIsNewChatRoomCreated(false);
-    console.log(
-      `Calling backend to create new chat room with title ${title} .AWAIT`
-    );
-    const newChatRoom = INITIAL_CHAT_ROOMS[0];
-    setChatRooms([...chatRooms, newChatRoom]);
-    setIsNewChatRoomCreated(true);
+    console.log(`Calling server to create new chat room with title ${title}`);
+    WebSocketClient.createChatRoom(title);
+    // const newChatRoom = INITIAL_CHAT_ROOMS[0];
+    // setChatRooms([...chatRooms, newChatRoom]);
+    //setIsNewChatRoomCreated(true);
   };
 
   const onSendRequest = (user, chatRoom) => {
     console.log(
-      `Sending request from ${user.email} to chatRoom ${chatRoom.title}`
+      `Sending request from ${user.name} to chatRoom ${chatRoom.title}`
     );
   };
 

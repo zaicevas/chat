@@ -121,10 +121,16 @@ public class WebSocketHandler {
                         .messages(new HashSet<>())
                         .participants(new HashSet<>())
                         .build();
-                ChatRoom dbChatRoom = chatRoomRepository.save(chatRoom);
-                TextMessage response = new TextMessage(new Gson().toJson(dbChatRoom));
+                chatRoomRepository.save(chatRoom);
+                WebSocketResponse response = WebSocketResponse.builder()
+                        .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
+                        .chatRooms(chatRoomRepository.findAll())
+                        .build();
+                String chatRooms = new Gson().toJson(response);
+                TextMessage responseString = new TextMessage(chatRooms);
                 // special class with responseType needed to specify purpose of the message
-                sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(response)));
+                sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(responseString)));
+                log.info(String.format("Created chat room (title %s) and sent ALL_CHAT_ROOMS to all sessions", request.getChatRoomTitle()));
                 break;
             }
             case WebSocketRequestType.REQUEST_TO_JOIN_CHAT_ROOM: {
