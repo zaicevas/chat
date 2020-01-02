@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -26,8 +26,8 @@ public class User {
     private String avatar;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private transient Set<Message> messages;
+    private transient List<Message> messages;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private transient Set<ChatRoom> chatRoomsOwned;
+    private transient List<ChatRoom> chatRoomsOwned;
 }

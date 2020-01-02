@@ -26,7 +26,7 @@ public class Message {
     @ManyToOne
     private User user;
 
-    @OneToOne
-    private transient ChatRoom chatRoom;
+    //@OneToOne
+    //private transient ChatRoom chatRoom;
 
 }

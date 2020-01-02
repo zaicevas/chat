@@ -18,70 +18,7 @@ import Dialog from 'react-native-dialog';
 import { SCREEN_CHAT } from '../constants/Screens';
 import WebSocketClient from '../helper/WebSocketClient';
 
-const INITIAL_CHAT_ROOMS = [
-  {
-    id: 0,
-    title: 'TITLE_CHAT_ROOM',
-    latestMessage: 'LATEST_MESSAGE',
-    latestMessageTime: '3:43 pm',
-    createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
-    participants: [],
-    creator: {
-      id: '114066371352845822146',
-      name: 'Tomas Zaicevas',
-      givenName: 'Tomas',
-      familyName: 'Zaicevas',
-      email: 'tozaicevas@gmail.com',
-      photoUrl:
-        'https://lh3.googleusercontent.com/a-/AAuE7mCGuhnSeQ0XrJ2n2RIo4OgFiRBNgcSfO0bq31s-'
-    }
-  },
-  {
-    id: 1,
-    title: 'NOT_BY_TOZAICEVAS',
-    latestMessage: 'LATEST_MESSAGE',
-    latestMessageTime: '3:43 pm',
-    createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
-    participants: [],
-    creator: {
-      id: '11406637132845822146',
-      name: 'Tomas Zaicevas',
-      givenName: 'Tomas',
-      familyName: 'Zaicevas',
-      email: 'tozaicevas@gmail.com',
-      photoUrl:
-        'https://lh3.googleusercontent.com/a-/AAuE7mCGuhnSeQ0XrJ2n2RIo4OgFiRBNgcSfO0bq31s-'
-    }
-  }
-];
-
-const MOCK_CHAT_ROOMS = [
-  {
-    id: 0,
-    title: 'chat room nr. 1',
-    createdAt: new Date(),
-    creator: {
-      id: 5,
-      name: 'tozaicevas@gmail.com',
-      avatar:
-        'https://lh3.googleusercontent.com/a-/AAuE7mCGuhnSeQ0XrJ2n2RIo4OgFiRBNgcSfO0bq31s-'
-    },
-    participants: [],
-    lastMessage: {
-      _id: 1,
-      text: 'my msg',
-      createdAt: new Date(),
-      user: {
-        _id: '11406637132845822146',
-        name: 'tozaicevas@gmail.com',
-        avatar:
-          'https://lh3.googleusercontent.com/a-/AAuE7mCGuhnSeQ0XrJ2n2RIo4OgFiRBNgcSfO0bq31s-'
-      }
-    }
-  }
-];
-
-const LOCKED_TIMESTAMP = '???';
+const LOCKED_MESSAGE = '???';
 
 const isUserPresentInChatRoom = (user, chatRoom) =>
   chatRoom.participants.some(participant => participant._id === user._id) ||
@@ -106,7 +43,8 @@ const ChatRooms = ({ chatRooms, navigation, user, onSendRequest }) => (
               ? () =>
                   navigation.navigate(SCREEN_CHAT, {
                     title: chatRoom.title,
-                    user
+                    user,
+                    chatRoom
                   })
               : () =>
                   Alert.alert(
@@ -137,7 +75,9 @@ const ChatRooms = ({ chatRooms, navigation, user, onSendRequest }) => (
               {chatRoom.title}
             </Text>
             <Text note {...(!isUserParticipating ? textStyle : {})}>
-              {(chatRoom.lastMessage && chatRoom.lastMessage.title) || ''}
+              {isUserParticipating
+                ? (chatRoom.lastMessage && chatRoom.lastMessage.text) || ''
+                : LOCKED_MESSAGE}
             </Text>
           </Body>
           <Right>
@@ -146,7 +86,7 @@ const ChatRooms = ({ chatRooms, navigation, user, onSendRequest }) => (
                 ? (chatRoom.lastMessage &&
                     chatRoom.lastMessage.createdAt.toLocaleString()) ||
                   ''
-                : LOCKED_TIMESTAMP}
+                : LOCKED_MESSAGE}
             </Text>
           </Right>
         </ListItem>

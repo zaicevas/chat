@@ -53,24 +53,24 @@ public class WebSocketHandler {
                 User user = request.getUser();
                 sessionToUser.put(session, user.getId());
                 userRepository.save(user);
-                log.info(String.format("Added user (id %s) to session (id %s)", user.getId(), session.getId()));
+                log.info(String.format("Added user (id: %s) to session (id: %s)", user.getId(), session.getId()));
                 break;
             }
             case WebSocketRequestType.GET_CHAT_ROOMS: {
                 // query db for all chat rooms and return them
                 WebSocketResponse response = WebSocketResponse.builder()
                         .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
-                        .chatRooms(chatRoomRepository.findAll())
+                        .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
                         .build();
                 String chatRooms = new Gson().toJson(response);
                 session.sendMessage(new TextMessage(chatRooms));
-                log.info(String.format("Sent chat rooms to user (id %s)", sessionToUser.get(session)));
+                log.info(String.format("Sent chat rooms to user (id: %s)", sessionToUser.get(session)));
                 break;
             }
             case WebSocketRequestType.SUBSCRIBE_TO_CHAT: {
                 // map user to chat room
                 userToChatRoom.put(request.getUser().getId(), request.getChatRoomId());
-                log.info(String.format("User (id %s) subscribed to chat room (id %d)", request.getUser().getId(), request.getChatRoomId()));
+                log.info(String.format("User (id: %s) subscribed to chat room (id: %d)", request.getUser().getId(), request.getChatRoomId()));
                 break;
             }
             case WebSocketRequestType.UNSUBSCRIBE_TO_CHAT: {
@@ -78,7 +78,7 @@ public class WebSocketHandler {
                 int chatRoomId = userToChatRoom.get(sessionToUser.get(session));
                 // Integer chatRoomId = userToChatRoom.get(request.getUser().getId());
                 userToChatRoom.remove(request.getUser().getId());
-                log.info(String.format("User (id %s) unsubscribed to chat room (id %d)", request.getUser().getId(), chatRoomId));
+                log.info(String.format("User (id: %s) unsubscribed to chat room (id: %d)", request.getUser().getId(), chatRoomId));
                 break;
             }
             case WebSocketRequestType.GET_CHAT: {
@@ -88,9 +88,13 @@ public class WebSocketHandler {
                         .messages(Collections.emptySet())
                         .build();
                 Set<Message> chatMessages = chatRoomRepository.findById(chatRoomId).orElse(emptyChatRoom).getMessages();
-                TextMessage json = new TextMessage(new Gson().toJson(chatMessages));
+                WebSocketResponse response = WebSocketResponse.builder()
+                        .responseType(WebSocketResponseType.ALL_CHAT)
+                        .messages(chatMessages)
+                        .build();
+                TextMessage json = new TextMessage(new Gson().toJson(response));
                 session.sendMessage(json);
-                log.info(String.format("Chat (id %d) sent to user (id %s)", chatRoomId, sessionToUser.get(session)));
+                log.info(String.format("Chat (id: %d) sent to user (id: %s)", chatRoomId, sessionToUser.get(session)));
                 break;
             }
             case WebSocketRequestType.POST_NEW_MESSAGE: {
@@ -99,17 +103,43 @@ public class WebSocketHandler {
                 chatRoomRepository.findById(request.getChatRoomId())
                         .ifPresent(UtilException.rethrowConsumer((chatRoom) -> {
                             userRepository.findById(chatMessage.getUser().getId()).ifPresent(UtilException.rethrowConsumer(user -> {
-                                Message dbMessage = messageRepository.save(chatMessage);
-                                chatRoom.setLastMessage(dbMessage);
-                                Set<Message> updatedMessages = Stream.concat(chatRoom.getMessages().stream(), Stream.of(dbMessage))
-                                        .collect(Collectors.toSet());
-                                chatRoom.setMessages(updatedMessages);
-                                chatRoomRepository.save(chatRoom);
-                                TextMessage newMessageJson = new TextMessage(new Gson().toJson(dbMessage));
-                                session.sendMessage(newMessageJson);
-                                log.info(String.format("Added new message (id %d) to chat room (id %d)", dbMessage.getId(), request.getChatRoomId()));
+                                    //chatMessage.setChatRoom(chatRoom);
+                                    Message dbMessage = messageRepository.save(chatMessage);
+                                    chatRoom.setLastMessage(dbMessage);
+                                    Set<Message> updatedMessages = Stream.concat(chatRoom.getMessages().stream(), Stream.of(dbMessage))
+                                            .collect(Collectors.toSet());
+
+                                    chatRoom.setMessages(updatedMessages);
+                                    chatRoomRepository.save(chatRoom);
+
+                                    WebSocketResponse response = WebSocketResponse.builder()
+                                            .responseType(WebSocketResponseType.UPDATE_CHAT)
+                                            .message(dbMessage)
+                                            .build();
+                                    TextMessage newMessageJson = new TextMessage(new Gson().toJson(response));
+                                    Map<String, Integer> subscribedSessions = userToChatRoom.entrySet().stream()
+                                            .filter(entry -> entry.getValue() == request.getChatRoomId())
+                                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                                    sessionToUser.entrySet().stream()
+                                            .filter(entry -> subscribedSessions.containsKey(entry.getValue()))
+                                            .forEach(UtilException.rethrowConsumer(entry -> entry.getKey().sendMessage(newMessageJson)));
+
+                                    WebSocketResponse getChatRooms = WebSocketResponse.builder()
+                                            .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
+                                            .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
+                                            .build();
+                                    TextMessage allChatRoomsJson = new TextMessage(new Gson().toJson(getChatRooms));
+                                    chatRoom.getParticipants().stream()
+                                            .filter(participant -> sessionToUser.values().contains(participant.getId()))
+                                            .forEach(UtilException.rethrowConsumer(participant -> sessionToUser.entrySet().stream()
+                                                    .filter(entry -> participant.getId().equals(entry.getValue()))
+                                                    .map(Map.Entry::getKey)
+                                                    .forEach(UtilException.rethrowConsumer(s -> s.sendMessage(allChatRoomsJson)))));
+                                    session.sendMessage(allChatRoomsJson);
+//                                    sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(allChatRoomsJson)));
+                                    log.info(String.format("Added new message (id: %d) to chat room (id: %d)", dbMessage.getId(), request.getChatRoomId()));
+                                }));
                             }));
-                        }));
                 break;
             }
             case WebSocketRequestType.CREATE_CHAT_ROOM: {
@@ -124,13 +154,13 @@ public class WebSocketHandler {
                 chatRoomRepository.save(chatRoom);
                 WebSocketResponse response = WebSocketResponse.builder()
                         .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
-                        .chatRooms(chatRoomRepository.findAll())
+                        .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
                         .build();
                 String chatRooms = new Gson().toJson(response);
                 TextMessage responseString = new TextMessage(chatRooms);
                 // special class with responseType needed to specify purpose of the message
                 sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(responseString)));
-                log.info(String.format("Created chat room (title %s) and sent ALL_CHAT_ROOMS to all sessions", request.getChatRoomTitle()));
+                log.info(String.format("Created chat room (title: %s) and sent ALL_CHAT_ROOMS to all sessions", request.getChatRoomTitle()));
                 break;
             }
             case WebSocketRequestType.REQUEST_TO_JOIN_CHAT_ROOM: {
@@ -154,6 +184,8 @@ public class WebSocketHandler {
                 // return all results from requests that have been created by the user
                 break;
             }
+            default:
+                break;
         }
     }
 

@@ -1,3 +1,5 @@
+import { WebSocketRequest, WebSocketResponse } from '../constants';
+
 class WebSocketClient {
   // onFetchedChatRooms -> ALL_CHAT_ROOMS
   constructor(url) {
@@ -27,37 +29,87 @@ class WebSocketClient {
 
   sayHello() {
     const req = {
-      requestType: 'SAY_HELLO',
+      requestType: WebSocketRequest.SAY_HELLO,
       user: this.user
     };
     this.client.send(JSON.stringify(req));
-    this.log('SAY_HELLO');
+    this.log(WebSocketRequest.SAY_HELLO);
   }
 
   getChatRooms() {
     const req = {
-      requestType: 'GET_CHAT_ROOMS'
+      requestType: WebSocketRequest.GET_CHAT_ROOMS
     };
     this.send(req);
-    this.log('GET_CHAT_ROOMS');
+    this.log(WebSocketRequest.GET_CHAT_ROOMS);
   }
 
   createChatRoom(title) {
     const req = {
-      requestType: 'CREATE_CHAT_ROOM',
+      requestType: WebSocketRequest.CREATE_CHAT_ROOM,
       chatRoomTitle: title,
       user: this.user
     };
     this.send(req);
-    this.log('CREATE_CHAT_ROOM');
+    this.log(WebSocketRequest.CREATE_CHAT_ROOM);
+  }
+
+  subscribeToChat(chatRoomId) {
+    const req = {
+      requestType: WebSocketRequest.SUBSCRIBE_TO_CHAT,
+      user: this.user,
+      chatRoomId
+    };
+    this.send(req);
+    this.log(WebSocketRequest.SUBSCRIBE_TO_CHAT);
+  }
+
+  unsubscribeToChat() {
+    const req = {
+      requestType: WebSocketRequest.UNSUBSCRIBE_TO_CHAT,
+      user: this.user
+    };
+    this.send(req);
+    this.log(WebSocketRequest.UNSUBSCRIBE_TO_CHAT);
+  }
+
+  getChat(chatRoomId) {
+    const req = {
+      requestType: WebSocketRequest.GET_CHAT,
+      chatRoomId
+    };
+    this.send(req);
+    this.log(WebSocketRequest.GET_CHAT);
+  }
+
+  postNewMessage(message, chatRoomId) {
+    const { _id, ...messageWithoutId } = message;
+    const req = {
+      requestType: WebSocketRequest.POST_NEW_MESSAGE,
+      chatRoomId,
+      message: messageWithoutId
+    };
+    console.log(req);
+    this.send(req);
+    this.log(WebSocketRequest.POST_NEW_MESSAGE);
   }
 
   onResponse = response => {
     const data = JSON.parse(response.data);
     console.log('Received from the server: ');
     console.log(response.data);
-    if (data.responseType === 'ALL_CHAT_ROOMS') {
-      this.onFetchedChatRooms(data.chatRooms);
+    switch (data.responseType) {
+      case WebSocketResponse.ALL_CHAT_ROOMS:
+        this.onFetchedChatRooms(data.chatRooms);
+        break;
+      case WebSocketResponse.ALL_CHAT:
+        this.onFetchedChat(data.messages);
+        break;
+      case WebSocketResponse.UPDATE_CHAT:
+        this.onUpdatedChat(data.message);
+        break;
+      default:
+        break;
     }
   };
 }

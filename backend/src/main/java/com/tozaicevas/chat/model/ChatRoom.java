@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -26,11 +27,11 @@ public class ChatRoom {
     private Message lastMessage;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private transient Set<Message> messages;
+    private Set<Message> messages = new HashSet<>();
 
     @OneToOne
     private User creator;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Set<User> participants;
+    private Set<User> participants = new HashSet<>();
 }
