@@ -6,7 +6,6 @@ import com.tozaicevas.chat.model.Message;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

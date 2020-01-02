@@ -2,20 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c3bb7a9b-0df1-4976-9d04-0ca935f1ddb1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/ChatRoom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/ChatRoom.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/ChatRoom$ChatRoomBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/ChatRoom$ChatRoomBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/ChatRoom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/ChatRoom.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/User$UserBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/User$UserBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/tozaicevas/chat/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/.expo/packager-info.json" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/.expo/packager-info.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/src/screens/ChatRoomsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/src/screens/ChatRoomsScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mobile/src/screens/ChatScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/src/screens/ChatScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -38,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="159" column="16" selection-start-line="159" selection-start-column="16" selection-end-line="159" selection-end-column="16" />
+            <state relative-caret-position="296">
+              <caret line="66" selection-start-line="66" selection-end-line="66" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -54,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+              <caret line="4" column="15" lean-forward="true" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -95,14 +82,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="15" column="14" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="120">
+              <caret line="8" column="19" lean-forward="true" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -177,13 +161,13 @@
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/helper/UtilException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketRequest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponseType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/ChatRoom.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/config/WebSocketConfig.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/User.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/Message.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" />
       </list>
     </option>
   </component>
@@ -311,10 +295,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1" />
-    <option name="y" value="-22" />
-    <option name="width" value="1922" />
-    <option name="height" value="1103" />
+    <option name="x" value="967" />
+    <option name="y" value="-9" />
+    <option name="width" value="941" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -425,9 +409,10 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578001660482" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578001901756" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -534,6 +519,12 @@
           <line>159</line>
           <properties />
           <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java</url>
+          <line>65</line>
+          <properties />
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -742,16 +733,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="15" column="14" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/config/WebSocketConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -794,6 +775,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="15" lean-forward="true" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/ChatRoom.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="311">
@@ -804,20 +792,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="159" column="16" selection-start-line="159" selection-start-column="16" selection-end-line="159" selection-end-column="16" />
+        <state relative-caret-position="296">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="19" lean-forward="true" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
         </state>
       </provider>
     </entry>
