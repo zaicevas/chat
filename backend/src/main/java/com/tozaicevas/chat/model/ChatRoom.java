@@ -26,7 +26,7 @@ public class ChatRoom {
     private Message lastMessage;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Set<Message> messages;
+    private transient Set<Message> messages;
 
     @OneToOne
     private User creator;

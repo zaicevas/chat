@@ -1,33 +1,51 @@
-const connect = () => {
-    const ws = new WebSocket('ws://192.168.1.34:8080/chat');
-	ws.onmessage = (data) => {
-        console.log("GOT MESSAGE: ");
-        console.log(data);
-    }
-    ws.onopen = () => {
-        console.log("Connection open, sending");
-        ws.send(JSON.stringify({id: 5}));
-    }
-    ws.onerror = e => {
-        console.log(e.message);
+class WebSocketClient {
+  // onFetchedChatRooms -> ALL_CHAT_ROOMS
+  constructor(url) {
+    this.url = url;
+  }
+
+  log(requestType) {
+    console.log(`Sent ${requestType} to the server`);
+  }
+
+  init(user) {
+    this.user = user;
+    this.client = new WebSocket(this.url);
+    this.client.onmessage = this.onResponse;
+    this.client.onerror = err =>
+      console.log('Error while connecting to the server: ' + err);
+
+    this.client.onopen = () => {
+      this.sayHello(this.user);
+      this.getChatRooms();
     };
-    return ws;
-}
+  }
 
-const disconnect = (ws) => {
-    if (ws != null) {
-        ws.close();
+  sayHello() {
+    const req = {
+      requestType: 'SAY_HELLO',
+      user: this.user
+    };
+    this.client.send(JSON.stringify(req));
+    this.log('SAY_HELLO');
+  }
+
+  getChatRooms() {
+    const req = {
+      requestType: 'GET_CHAT_ROOMS'
+    };
+    this.client.send(JSON.stringify(req));
+    this.log('GET_CHAT_ROOMS');
+  }
+
+  onResponse = response => {
+    const data = JSON.parse(response.data);
+    if (data.responseType === 'ALL_CHAT_ROOMS') {
+      this.onFetchedChatRooms(data.chatRooms);
     }
-    console.log("Disconnected");
+  };
 }
 
-const send = (ws, obj) => {
-    ws.send(JSON.stringify(obj));
-    console.log("obj send");
-}
+const client = new WebSocketClient('ws://192.168.1.8:8080/chat');
 
-const showGreeting = (message) => {
-    $("#greetings").append(" " + message + "");
-}
-
-export default { connect, disconnect, send };
+export default client;

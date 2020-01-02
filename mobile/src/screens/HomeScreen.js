@@ -2,6 +2,8 @@ import * as Google from 'expo-google-app-auth';
 import React, { useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import Colors from '../constants/Colors';
+import { toGiftedChatUser } from '../helper/Parse';
+import WebSocketClient from '../helper/WebSocketClient';
 import ChatRoomsScreen from './ChatRoomsScreen';
 
 const HomeScreen = ({ navigation }) => {
@@ -12,15 +14,19 @@ const HomeScreen = ({ navigation }) => {
     try {
       const result = await Google.logInAsync({
         scopes: ['profile', 'email'],
-        iosClientId: '1019525006370-lp164cf6hikrcjq6rj1kb5acrm8neq4k.apps.googleusercontent.com',
-        androidClientId: '1019525006370-gn86jfn92alo8u4kufj58uchfm9mbupj.apps.googleusercontent.com',
+        iosClientId:
+          '1019525006370-lp164cf6hikrcjq6rj1kb5acrm8neq4k.apps.googleusercontent.com',
+        androidClientId:
+          '1019525006370-gn86jfn92alo8u4kufj58uchfm9mbupj.apps.googleusercontent.com'
       });
 
       if (result.type === 'success') {
-        console.log('USER:');
-        console.log(result);
+        const parsedUser = toGiftedChatUser(result.user);
+        console.log('PARSED USER:');
+        console.log(parsedUser);
         setIsLoggedIn(true);
-        setUser(result.user);
+        setUser(parsedUser);
+        WebSocketClient.init(parsedUser);
       } else {
         console.log('cancelled');
       }
@@ -36,12 +42,11 @@ const HomeScreen = ({ navigation }) => {
       </View>
     );
   }
-  return (<ChatRoomsScreen user={user} navigation={navigation} />);
+  return <ChatRoomsScreen user={user} navigation={navigation} />;
 };
 
-
 HomeScreen.navigationOptions = () => ({
-  header: null,
+  header: null
 });
 
 const styles = StyleSheet.create({
@@ -49,8 +54,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'
+  }
 });
 
 export default HomeScreen;

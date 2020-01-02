@@ -3,6 +3,8 @@ package com.tozaicevas.chat.controller;
 import com.google.gson.Gson;
 import com.tozaicevas.chat.dto.WebSocketRequest;
 import com.tozaicevas.chat.dto.WebSocketRequestType;
+import com.tozaicevas.chat.dto.WebSocketResponse;
+import com.tozaicevas.chat.dto.WebSocketResponseType;
 import com.tozaicevas.chat.helper.UtilException;
 import com.tozaicevas.chat.model.ChatRoom;
 import com.tozaicevas.chat.model.Message;
@@ -56,8 +58,13 @@ public class WebSocketHandler {
             }
             case WebSocketRequestType.GET_CHAT_ROOMS: {
                 // query db for all chat rooms and return them
-                String chatRooms = new Gson().toJson(chatRoomRepository.findAll());
+                WebSocketResponse response = WebSocketResponse.builder()
+                        .responseType(WebSocketResponseType.ALL_CHAT_ROOMS)
+                        .chatRooms(chatRoomRepository.findAll())
+                        .build();
+                String chatRooms = new Gson().toJson(response);
                 session.sendMessage(new TextMessage(chatRooms));
+                log.info(String.format("Sent chat rooms to user (id %s)", sessionToUser.get(session)));
                 break;
             }
             case WebSocketRequestType.SUBSCRIBE_TO_CHAT: {
