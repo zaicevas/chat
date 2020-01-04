@@ -2,6 +2,7 @@ import * as Google from 'expo-google-app-auth';
 import React, { useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import Colors from '../constants/Colors';
+import { SCREEN_CHAT_ROOMS } from '../constants/Screens';
 import { toGiftedChatUser } from '../helper/Parse';
 import WebSocketClient from '../helper/WebSocketClient';
 import ChatRoomsScreen from './ChatRoomsScreen';
@@ -24,9 +25,10 @@ const HomeScreen = ({ navigation }) => {
         const parsedUser = toGiftedChatUser(result.user);
         console.log('PARSED USER:');
         console.log(parsedUser);
-        setIsLoggedIn(true);
-        setUser(parsedUser);
+        //setIsLoggedIn(true);
+        //setUser(parsedUser);
         WebSocketClient.init(parsedUser);
+        navigation.navigate(SCREEN_CHAT_ROOMS, { user: parsedUser });
       } else {
         console.log('cancelled');
       }

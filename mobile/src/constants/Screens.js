@@ -1,5 +1,6 @@
 const SCREEN_HOME = 'Home';
 const SCREEN_CHAT_ROOMS = 'ChatRooms';
 const SCREEN_CHAT = 'Chat';
+const SCREEN_REQUESTS = 'Requests';
 
-export { SCREEN_HOME, SCREEN_CHAT_ROOMS, SCREEN_CHAT };
+export { SCREEN_HOME, SCREEN_CHAT_ROOMS, SCREEN_CHAT, SCREEN_REQUESTS };

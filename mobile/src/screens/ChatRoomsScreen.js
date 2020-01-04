@@ -117,7 +117,8 @@ const NewChatRoomDialog = ({ visible, setVisible, onCreateChatRoom }) => {
   );
 };
 
-const ChatRoomsScreen = ({ navigation, user }) => {
+const ChatRoomsScreen = ({ navigation }) => {
+  const user = navigation.getParam('user');
   const [isLoaded, setIsLoaded] = useState(false);
   const [isNewChatRoomCreated, setIsNewChatRoomCreated] = useState(true);
 
