@@ -6,9 +6,7 @@ import com.tozaicevas.chat.dto.WebSocketRequestType;
 import com.tozaicevas.chat.dto.WebSocketResponse;
 import com.tozaicevas.chat.dto.WebSocketResponseType;
 import com.tozaicevas.chat.helper.UtilException;
-import com.tozaicevas.chat.model.ChatRoom;
-import com.tozaicevas.chat.model.Message;
-import com.tozaicevas.chat.model.User;
+import com.tozaicevas.chat.model.*;
 import com.tozaicevas.chat.repository.ChatRoomRepository;
 import com.tozaicevas.chat.repository.ChatRoomRequestRepository;
 import com.tozaicevas.chat.repository.MessageRepository;
@@ -166,23 +164,91 @@ public class WebSocketHandler {
             }
             case WebSocketRequestType.REQUEST_TO_JOIN_CHAT_ROOM: {
                 // insert the request to a database and send the request to chat room's creator
+                chatRoomRepository.findById(request.getChatRoomId()).ifPresent(UtilException.rethrowConsumer(chatRoom -> {
+                    userRepository.findById(request.getUser().getId()).ifPresent(UtilException.rethrowConsumer(user -> {
+                        ChatRoomRequest newRequest = ChatRoomRequest.builder()
+                                .user(user)
+                                .chatRoom(chatRoom)
+                                .createdAt(new Date())
+                                .status(ChatRoomRequestStatus.PENDING)
+                                .build();
+                        chatRoomRequestRepository.save(newRequest);
+                        String chatRoomCreatorId = chatRoom.getCreator().getId();
+                        WebSocketResponse response = WebSocketResponse.builder()
+                                .responseType(WebSocketResponseType.NEW_REQUEST)
+                                .build();
+                        TextMessage responseBinary = new TextMessage(gson.toJson(response));
+                        sessionToUser.entrySet().stream()
+                                .filter(s -> s.getValue().equals(chatRoomCreatorId))
+                                .forEach(UtilException.rethrowConsumer(s -> s.getKey().sendMessage(responseBinary)));
+                        log.info(String.format("User (id: %s) requested to join chat room (title: %s)", request.getUser().getId(), chatRoom.getTitle()));
+                    }));
+                }));
                 break;
             }
             case WebSocketRequestType.ACCEPT_REQUEST_TO_JOIN_CHAT_ROOM: {
                 // update the request record in db to be accepted, add user to participants of the chat room
                 // and send notification to the accepted user
+                    userRepository.findById(request.getUser().getId()).ifPresent(UtilException.rethrowConsumer(user -> {
+                        chatRoomRequestRepository.findById(request.getChatRoomRequestId()).ifPresent(UtilException.rethrowConsumer(req -> {
+                            ChatRoom chatRoom = req.getChatRoom();
+                            if (!user.getId().equals(chatRoom.getCreator().getId()))
+                                return;
+                            req.setStatus(ChatRoomRequestStatus.ACCEPTED);
+                            Set<User> updatedParticipants = Stream.concat(chatRoom.getParticipants().stream(), Stream.of(user))
+                                    .collect(Collectors.toSet());
+                            chatRoom.setParticipants(updatedParticipants);
+                            ChatRoom dbChatRoom = chatRoomRepository.save(chatRoom);
+                            req.setChatRoom(dbChatRoom);
+                            chatRoomRequestRepository.save(req);
+
+                            WebSocketResponse response = WebSocketResponse.builder()
+                                    .responseType(WebSocketResponseType.NEW_ACCEPTED_REQUEST)
+                                    .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
+                                    .build();
+                            sendResponseToUser(req.getUser().getId(), response);
+
+                            log.info(String.format("User (id: %s) accepted user's (id: %s) request to join chat room (title: %s)",
+                                    request.getUser().getId(), req.getUser().getId(), chatRoom.getTitle()));
+                        }));
+                    }));
                 break;
             }
             case WebSocketRequestType.DECLINE_REQUEST_TO_JOIN_CHAT_ROOM: {
                 // update the request record in db to be accepted, and send notification to the declined user
+                userRepository.findById(request.getUser().getId()).ifPresent(UtilException.rethrowConsumer(user -> {
+                    chatRoomRequestRepository.findById(request.getChatRoomRequestId()).ifPresent(UtilException.rethrowConsumer(req -> {
+                        ChatRoom chatRoom = req.getChatRoom();
+                        if (!user.getId().equals(chatRoom.getCreator().getId()))
+                            return;
+                        req.setStatus(ChatRoomRequestStatus.DECLINED);
+                        Set<User> updatedParticipants = Stream.concat(chatRoom.getParticipants().stream(), Stream.of(user))
+                                .collect(Collectors.toSet());
+                        chatRoom.setParticipants(updatedParticipants);
+                        ChatRoom dbChatRoom = chatRoomRepository.save(chatRoom);
+                        req.setChatRoom(dbChatRoom);
+                        chatRoomRequestRepository.save(req);
+
+                        WebSocketResponse response = WebSocketResponse.builder()
+                                .responseType(WebSocketResponseType.NEW_DECLINED_REQUEST)
+                                .build();
+                        sendResponseToUser(req.getUser().getId(), response);
+
+                        log.info(String.format("User (id: %s) declined user's (id: %s) request to join chat room (title: %s)",
+                                request.getUser().getId(), req.getUser().getId(), chatRoom.getTitle()));
+                    }));
+                }));
                 break;
             }
             case WebSocketRequestType.GET_REQUESTS_TO_JOIN_CHAT_ROOM: {
                 // return all requests for chat rooms that have been created by the user
-                break;
-            }
-            case WebSocketRequestType.GET_UNSEEN_REQUEST_RESULTS: {
-                // return all results from requests that have been created by the user
+                WebSocketResponse response = WebSocketResponse.builder()
+                        .responseType(WebSocketResponseType.ALL_REQUESTS_TO_JOIN_CHAT_ROOM)
+                        .chatRoomRequests(new HashSet<>(chatRoomRequestRepository.findAll()))
+                        .build();
+                String chatRooms = gson.toJson(response);
+                session.sendMessage(new TextMessage(chatRooms));
+                log.info(String.format("Sent all requests to join chat rooms to user (id: %s)", sessionToUser.get(session)));
                 break;
             }
             default:
@@ -195,6 +261,13 @@ public class WebSocketHandler {
         sessionToUser.remove(session);
         userToChatRoom.remove(userId);
         log.info(String.format("User (id %s) disconnected", userId));
+    }
+
+    private void sendResponseToUser(String userId, WebSocketResponse response) throws IOException {
+        TextMessage message = new TextMessage(gson.toJson(response));
+        sessionToUser.entrySet().stream()
+                .filter(s -> s.getValue().equals(userId))
+                .forEach(UtilException.rethrowConsumer(s -> s.getKey().sendMessage(message)));
     }
 
 }

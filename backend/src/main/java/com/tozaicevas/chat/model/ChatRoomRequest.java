@@ -1,5 +1,6 @@
 package com.tozaicevas.chat.model;
 
+import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,15 +17,20 @@ import java.util.Date;
 public class ChatRoomRequest {
     @Id
     @GeneratedValue
+    @Expose
     private int id;
 
     @ManyToOne
-    private transient ChatRoom chatRoom;
+    @Expose
+    private ChatRoom chatRoom;
 
     @OneToOne
-    private transient User user;
+    @Expose
+    private User user;
 
-    private Date createAt;
+    @Expose
+    private Date createdAt;
+
+    @Expose
     private String status;
-    private boolean seen;
 }

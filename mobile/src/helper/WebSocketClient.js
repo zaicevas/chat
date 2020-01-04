@@ -108,6 +108,9 @@ class WebSocketClient {
       case WebSocketResponse.UPDATE_CHAT:
         this.onUpdatedChat(data.message);
         break;
+      case WebSocketResponse.NEW_ACCEPTED_REQUEST:
+        this.onFetchedChatRooms(data.chatRooms);
+        break;
       default:
         break;
     }

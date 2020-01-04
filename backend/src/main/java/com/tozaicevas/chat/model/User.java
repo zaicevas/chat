@@ -26,10 +26,4 @@ public class User {
 
     @Expose
     private String avatar;
-
-//    @OneToMany(fetch = FetchType.EAGER)
-//    private transient List<Message> messages;
-
-    //@OneToMany(fetch = FetchType.EAGER)
-    //private transient List<ChatRoom> chatRoomsOwned;
 }
