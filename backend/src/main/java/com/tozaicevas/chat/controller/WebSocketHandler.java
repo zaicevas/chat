@@ -134,7 +134,8 @@ public class WebSocketHandler {
                                                     .filter(entry -> participant.getId().equals(entry.getValue()))
                                                     .map(Map.Entry::getKey)
                                                     .forEach(UtilException.rethrowConsumer(s -> s.sendMessage(allChatRoomsJson)))));
-                                    session.sendMessage(allChatRoomsJson);
+                                    sendResponseToUser(chatRoom.getCreator().getId(), getChatRooms);
+                                    //session.sendMessage(allChatRoomsJson);
 //                                    sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(allChatRoomsJson)));
                                     log.info(String.format("Added new message (id: %d) to chat room (id: %d)", dbMessage.getId(), request.getChatRoomId()));
                                 }));
@@ -311,3 +312,5 @@ public class WebSocketHandler {
 
 }
 
+// not inside chatroom not getting all_chatRooms
+// chat rooms with messages above

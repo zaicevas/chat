@@ -58,7 +58,10 @@ const RequestsScreen = ({ navigation }) => {
         ...req,
         id: req.id.toString()
       }));
-      setRequests(requestsWithStringId);
+      const sortedRequests = requestsWithStringId.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setRequests(sortedRequests);
     };
     WebSocketClient.getChatRoomRequests();
   }, []);

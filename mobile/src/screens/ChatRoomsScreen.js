@@ -126,11 +126,26 @@ const ChatRoomsScreen = ({ navigation }) => {
 
   useEffect(() => {
     WebSocketClient.onFetchedChatRooms = chatRooms => {
-      setChatRooms(chatRooms.reverse());
+      const [participated, locked] = chatRooms.reduce(
+        ([p, f], e) =>
+          isUserPresentInChatRoom(user, e) ? [[...p, e], f] : [p, [...f, e]],
+        [[], []]
+      );
+      const participatedSorted = participated.sort(
+        (a, b) =>
+          new Date(b.lastMessage ? b.lastMessage.createdAt : b.createdAt) -
+          new Date(a.lastMessage ? a.lastMessage.createdAt : a.createdAt)
+      );
+      const lockedSorted = locked.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      //      const participatedChatRooms = chatRooms.filter(room => isUserPresentInChatRoom(user, room));
+      setChatRooms([...participatedSorted, ...lockedSorted]);
       setIsLoaded(true);
       setIsNewChatRoomCreated(true);
     };
-  }, []);
+  }, [user]);
 
   const [visibleDialog, setVisibleDialog] = useState(false);
 
