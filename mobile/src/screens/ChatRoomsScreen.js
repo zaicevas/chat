@@ -20,10 +20,10 @@ import WebSocketClient from '../helper/WebSocketClient';
 
 const LOCKED_MESSAGE = '???';
 
-/* const isUserPresentInChatRoom = (user, chatRoom) =>
+const isUserPresentInChatRoom = (user, chatRoom) =>
   chatRoom.participants.some(participant => participant._id === user._id) ||
-  chatRoom.creator._id === user._id; */
-const isUserPresentInChatRoom = () => true;
+  chatRoom.creator._id === user._id;
+//const isUserPresentInChatRoom = () => true;
 
 const ChatRooms = ({ chatRooms, navigation, user, onSendRequest }) => (
   <List>
@@ -58,7 +58,7 @@ const ChatRooms = ({ chatRooms, navigation, user, onSendRequest }) => (
                       },
                       {
                         text: 'OK',
-                        onPress: () => onSendRequest(user, chatRoom)
+                        onPress: () => onSendRequest(chatRoom)
                       }
                     ],
                     { cancelable: false }
@@ -126,8 +126,6 @@ const ChatRoomsScreen = ({ navigation }) => {
 
   useEffect(() => {
     WebSocketClient.onFetchedChatRooms = chatRooms => {
-      console.log('Received chat rooms from server:');
-      console.log(chatRooms);
       setChatRooms(chatRooms.reverse());
       setIsLoaded(true);
       setIsNewChatRoomCreated(true);
@@ -143,10 +141,11 @@ const ChatRoomsScreen = ({ navigation }) => {
     WebSocketClient.createChatRoom(title);
   };
 
-  const onSendRequest = (user, chatRoom) => {
+  const onSendRequest = chatRoom => {
     console.log(
       `Sending request from ${user.name} to chatRoom ${chatRoom.title}`
     );
+    WebSocketClient.sendChatRoomRequest(chatRoom);
   };
 
   if (!isLoaded || !isNewChatRoomCreated) {

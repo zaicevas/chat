@@ -1,7 +1,6 @@
 import { WebSocketRequest, WebSocketResponse } from '../constants';
 
 class WebSocketClient {
-  // onFetchedChatRooms -> ALL_CHAT_ROOMS
   constructor(url) {
     this.url = url;
   }
@@ -89,15 +88,54 @@ class WebSocketClient {
       chatRoomId,
       message: messageWithoutId
     };
-    console.log(req);
     this.send(req);
     this.log(WebSocketRequest.POST_NEW_MESSAGE);
+  }
+
+  getChatRoomRequests() {
+    const req = {
+      requestType: WebSocketRequest.GET_REQUESTS_TO_JOIN_CHAT_ROOM,
+      user: this.user
+    };
+    this.send(req);
+    this.log(WebSocketRequest.GET_REQUESTS_TO_JOIN_CHAT_ROOM);
+  }
+
+  sendChatRoomRequest(chatRoom) {
+    const req = {
+      requestType: WebSocketRequest.REQUEST_TO_JOIN_CHAT_ROOM,
+      chatRoomId: chatRoom.id,
+      user: this.user
+    };
+    this.send(req);
+    this.log(WebSocketRequest.REQUEST_TO_JOIN_CHAT_ROOM);
+  }
+
+  acceptRequest(chatRoomRequest) {
+    const req = {
+      requestType: WebSocketRequest.ACCEPT_REQUEST_TO_JOIN_CHAT_ROOM,
+      chatRoomRequestId: chatRoomRequest.id,
+      user: this.user
+    };
+    this.send(req);
+    this.log(WebSocketRequest.ACCEPT_REQUEST_TO_JOIN_CHAT_ROOM);
+  }
+
+  declineRequest(chatRoomRequest) {
+    const req = {
+      requestType: WebSocketRequest.DECLINE_REQUEST_TO_JOIN_CHAT_ROOM,
+      chatRoomRequestId: chatRoomRequest.id,
+      user: this.user
+    };
+    this.send(req);
+    this.log(WebSocketRequest.DECLINE_REQUEST_TO_JOIN_CHAT_ROOM);
   }
 
   onResponse = response => {
     const data = JSON.parse(response.data);
     console.log('Received from the server: ');
     console.log(response.data);
+
     switch (data.responseType) {
       case WebSocketResponse.ALL_CHAT_ROOMS:
         this.onFetchedChatRooms(data.chatRooms);
@@ -108,8 +146,15 @@ class WebSocketClient {
       case WebSocketResponse.UPDATE_CHAT:
         this.onUpdatedChat(data.message);
         break;
+      case WebSocketResponse.NEW_REQUEST:
+        if (this.onFetchedChatRoomRequests)
+          this.onFetchedChatRoomRequests(data.chatRoomRequests);
+        break;
       case WebSocketResponse.NEW_ACCEPTED_REQUEST:
         this.onFetchedChatRooms(data.chatRooms);
+        break;
+      case WebSocketResponse.ALL_REQUESTS_TO_JOIN_CHAT_ROOM:
+        this.onFetchedChatRoomRequests(data.chatRoomRequests);
         break;
       default:
         break;

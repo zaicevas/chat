@@ -158,7 +158,9 @@ public class WebSocketHandler {
                 String chatRooms = gson.toJson(response);
                 TextMessage responseString = new TextMessage(chatRooms);
                 // special class with responseType needed to specify purpose of the message
-                sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(responseString)));
+                sessions.forEach(UtilException.rethrowConsumer(s -> {
+                        s.sendMessage(responseString);
+                }));
                 log.info(String.format("Created chat room (title: %s) and sent ALL_CHAT_ROOMS to all sessions", request.getChatRoomTitle()));
                 break;
             }
@@ -166,6 +168,11 @@ public class WebSocketHandler {
                 // insert the request to a database and send the request to chat room's creator
                 chatRoomRepository.findById(request.getChatRoomId()).ifPresent(UtilException.rethrowConsumer(chatRoom -> {
                     userRepository.findById(request.getUser().getId()).ifPresent(UtilException.rethrowConsumer(user -> {
+                        if (chatRoomRequestRepository.findAll().stream()
+                                .anyMatch(req -> req.getChatRoom().equals(chatRoom) && req.getUser().equals(user)
+                                        && req.getStatus().equals(ChatRoomRequestStatus.PENDING)))
+                            return;
+
                         ChatRoomRequest newRequest = ChatRoomRequest.builder()
                                 .user(user)
                                 .chatRoom(chatRoom)
@@ -173,10 +180,18 @@ public class WebSocketHandler {
                                 .status(ChatRoomRequestStatus.PENDING)
                                 .build();
                         chatRoomRequestRepository.save(newRequest);
+
                         String chatRoomCreatorId = chatRoom.getCreator().getId();
+
+                        Set<ChatRoomRequest> requests = chatRoomRequestRepository.findAll().stream()
+                                .filter(r -> r.getChatRoom().getCreator().equals(chatRoom.getCreator()) && r.getStatus().equals(ChatRoomRequestStatus.PENDING))
+                                .collect(Collectors.toSet());
+
                         WebSocketResponse response = WebSocketResponse.builder()
                                 .responseType(WebSocketResponseType.NEW_REQUEST)
+                                .chatRoomRequests(requests)
                                 .build();
+
                         TextMessage responseBinary = new TextMessage(gson.toJson(response));
                         sessionToUser.entrySet().stream()
                                 .filter(s -> s.getValue().equals(chatRoomCreatorId))
@@ -195,18 +210,30 @@ public class WebSocketHandler {
                             if (!user.getId().equals(chatRoom.getCreator().getId()))
                                 return;
                             req.setStatus(ChatRoomRequestStatus.ACCEPTED);
-                            Set<User> updatedParticipants = Stream.concat(chatRoom.getParticipants().stream(), Stream.of(user))
+                            Set<User> updatedParticipants = Stream.concat(chatRoom.getParticipants().stream(), Stream.of(req.getUser()))
                                     .collect(Collectors.toSet());
                             chatRoom.setParticipants(updatedParticipants);
                             ChatRoom dbChatRoom = chatRoomRepository.save(chatRoom);
                             req.setChatRoom(dbChatRoom);
                             chatRoomRequestRepository.save(req);
 
+                            Set<ChatRoom> chatRooms = new HashSet<>(chatRoomRepository.findAll());
+                            Set<ChatRoomRequest> requests = chatRoomRequestRepository.findAll().stream()
+                                            .filter(r -> r.getChatRoom().getCreator().equals(user) && r.getStatus().equals(ChatRoomRequestStatus.PENDING))
+                                            .collect(Collectors.toSet());
+
                             WebSocketResponse response = WebSocketResponse.builder()
                                     .responseType(WebSocketResponseType.NEW_ACCEPTED_REQUEST)
-                                    .chatRooms(new HashSet<>(chatRoomRepository.findAll()))
+                                    .chatRooms(chatRooms)
                                     .build();
                             sendResponseToUser(req.getUser().getId(), response);
+
+                            WebSocketResponse responseToAccepter = WebSocketResponse.builder()
+                                    .responseType(WebSocketResponseType.ALL_REQUESTS_TO_JOIN_CHAT_ROOM)
+                                    .chatRoomRequests(requests)
+                                    .build();
+
+                            session.sendMessage(new TextMessage(gson.toJson(responseToAccepter)));
 
                             log.info(String.format("User (id: %s) accepted user's (id: %s) request to join chat room (title: %s)",
                                     request.getUser().getId(), req.getUser().getId(), chatRoom.getTitle()));
@@ -222,17 +249,24 @@ public class WebSocketHandler {
                         if (!user.getId().equals(chatRoom.getCreator().getId()))
                             return;
                         req.setStatus(ChatRoomRequestStatus.DECLINED);
-                        Set<User> updatedParticipants = Stream.concat(chatRoom.getParticipants().stream(), Stream.of(user))
-                                .collect(Collectors.toSet());
-                        chatRoom.setParticipants(updatedParticipants);
-                        ChatRoom dbChatRoom = chatRoomRepository.save(chatRoom);
-                        req.setChatRoom(dbChatRoom);
                         chatRoomRequestRepository.save(req);
 
                         WebSocketResponse response = WebSocketResponse.builder()
                                 .responseType(WebSocketResponseType.NEW_DECLINED_REQUEST)
                                 .build();
                         sendResponseToUser(req.getUser().getId(), response);
+
+
+                        Set<ChatRoomRequest> requests = chatRoomRequestRepository.findAll().stream()
+                                .filter(r -> r.getChatRoom().getCreator().equals(user) && r.getStatus().equals(ChatRoomRequestStatus.PENDING))
+                                .collect(Collectors.toSet());
+
+                        WebSocketResponse responseToAccepter = WebSocketResponse.builder()
+                                .responseType(WebSocketResponseType.ALL_REQUESTS_TO_JOIN_CHAT_ROOM)
+                                .chatRoomRequests(requests)
+                                .build();
+
+                        session.sendMessage(new TextMessage(gson.toJson(responseToAccepter)));
 
                         log.info(String.format("User (id: %s) declined user's (id: %s) request to join chat room (title: %s)",
                                 request.getUser().getId(), req.getUser().getId(), chatRoom.getTitle()));
@@ -242,13 +276,18 @@ public class WebSocketHandler {
             }
             case WebSocketRequestType.GET_REQUESTS_TO_JOIN_CHAT_ROOM: {
                 // return all requests for chat rooms that have been created by the user
-                WebSocketResponse response = WebSocketResponse.builder()
-                        .responseType(WebSocketResponseType.ALL_REQUESTS_TO_JOIN_CHAT_ROOM)
-                        .chatRoomRequests(new HashSet<>(chatRoomRequestRepository.findAll()))
-                        .build();
-                String chatRooms = gson.toJson(response);
-                session.sendMessage(new TextMessage(chatRooms));
-                log.info(String.format("Sent all requests to join chat rooms to user (id: %s)", sessionToUser.get(session)));
+                userRepository.findById(request.getUser().getId()).ifPresent(UtilException.rethrowConsumer(user -> {
+                    Set<ChatRoomRequest> requests = chatRoomRequestRepository.findAll().stream()
+                            .filter(req -> req.getChatRoom().getCreator().equals(user) && req.getStatus().equals(ChatRoomRequestStatus.PENDING))
+                            .collect(Collectors.toSet());
+                    WebSocketResponse response = WebSocketResponse.builder()
+                            .responseType(WebSocketResponseType.ALL_REQUESTS_TO_JOIN_CHAT_ROOM)
+                            .chatRoomRequests(requests)
+                            .build();
+                    String chatRooms = gson.toJson(response);
+                    session.sendMessage(new TextMessage(chatRooms));
+                    log.info(String.format("Sent all requests to join chat rooms to user (id: %s)", sessionToUser.get(session)));
+                }));
                 break;
             }
             default:
@@ -260,7 +299,7 @@ public class WebSocketHandler {
         String userId = sessionToUser.get(session);
         sessionToUser.remove(session);
         userToChatRoom.remove(userId);
-        log.info(String.format("User (id %s) disconnected", userId));
+        log.info(String.format("User (session: %s) disconnected", session.getId()));
     }
 
     private void sendResponseToUser(String userId, WebSocketResponse response) throws IOException {
