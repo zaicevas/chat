@@ -312,5 +312,4 @@ public class WebSocketHandler {
 
 }
 
-// not inside chatroom not getting all_chatRooms
 // chat rooms with messages above

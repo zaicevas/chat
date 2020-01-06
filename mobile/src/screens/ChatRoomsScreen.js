@@ -126,22 +126,39 @@ const ChatRoomsScreen = ({ navigation }) => {
 
   useEffect(() => {
     WebSocketClient.onFetchedChatRooms = chatRooms => {
-      const [participated, locked] = chatRooms.reduce(
+      /*       const [participated, locked] = chatRooms.reduce(
         ([p, f], e) =>
           isUserPresentInChatRoom(user, e) ? [[...p, e], f] : [p, [...f, e]],
         [[], []]
+      ); */
+      const locked = chatRooms
+        .filter(room => !isUserPresentInChatRoom(user, room))
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const participatedWithMessages = chatRooms
+        .filter(room => room.lastMessage && isUserPresentInChatRoom(user, room))
+        .sort(
+          (a, b) =>
+            new Date(b.lastMessage.createdAt) -
+            new Date(a.lastMessage.createdAt)
+        );
+      const participatedWithoutMessages = chatRooms.filter(
+        room => !room.lastMessage && isUserPresentInChatRoom(user, room)
       );
-      const participatedSorted = participated.sort(
+
+      /*       const participatedSorted = participated.sort(
         (a, b) =>
           new Date(b.lastMessage ? b.lastMessage.createdAt : b.createdAt) -
           new Date(a.lastMessage ? a.lastMessage.createdAt : a.createdAt)
       );
       const lockedSorted = locked.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
+      ); */
 
-      //      const participatedChatRooms = chatRooms.filter(room => isUserPresentInChatRoom(user, room));
-      setChatRooms([...participatedSorted, ...lockedSorted]);
+      setChatRooms([
+        ...participatedWithMessages,
+        ...participatedWithoutMessages,
+        ...locked
+      ]);
       setIsLoaded(true);
       setIsNewChatRoomCreated(true);
     };
