@@ -2,13 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import React from 'react';
+import FlashMessage from 'react-native-flash-message';
 import AppContainer from './src/navigation/AppContainer';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isReady: false,
+      isReady: false
     };
   }
 
@@ -16,7 +17,7 @@ class App extends React.Component {
     await Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'),
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-      ...Ionicons.font,
+      ...Ionicons.font
     });
     this.setState({ isReady: true });
   }
@@ -27,7 +28,10 @@ class App extends React.Component {
     }
 
     return (
-      <AppContainer />
+      <>
+        <AppContainer />
+        <FlashMessage position="top" icon="auto" />
+      </>
     );
   }
 }

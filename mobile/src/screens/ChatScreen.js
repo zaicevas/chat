@@ -1,14 +1,12 @@
-import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import SystemMessage from '../components/SystemMessage';
-import Colors from '../constants/Colors';
 import WebSocketClient from '../helper/WebSocketClient';
 
 const getInitialSystemMessage = chatRoom => ({
   _id: -1,
-  text: `Chat room was created by ${chatRoom.creator.name}`,
+  text: `Chat room created by ${chatRoom.creator.name}`,
   createdAt: new Date(chatRoom.createdAt),
   system: true,
   user: {
@@ -73,15 +71,15 @@ const ChatScreen = ({ navigation }) => {
 };
 
 ChatScreen.navigationOptions = ({ navigation }) => ({
-  title: navigation.getParam('title', 'Chat'),
-  headerRight: () => (
+  title: navigation.getParam('title', 'Chat')
+  /*   headerRight: () => (
     <MaterialIcons
       name="add-circle"
       size={28}
       style={{ paddingRight: 12 }}
       color={Colors.emerald}
     />
-  )
+  ) */
 });
 
 export default ChatScreen;

@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import Dialog from 'react-native-dialog';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SCREEN_CHAT } from '../constants/Screens';
 import WebSocketClient from '../helper/WebSocketClient';
 
@@ -211,10 +212,12 @@ const ChatRoomsScreen = ({ navigation }) => {
       <Container>
         <Header>
           <Left>
-            <Thumbnail
-              source={{ uri: user.avatar }}
-              style={{ width: 25, height: 25 }}
-            />
+            <TouchableOpacity activeOpacity={0.4} onPress={() => {}}>
+              <Thumbnail
+                source={{ uri: user.avatar }}
+                style={{ width: 30, height: 30 }}
+              />
+            </TouchableOpacity>
           </Left>
           <Body>
             <Title>Chat Rooms</Title>

@@ -26,4 +26,7 @@ public class WebSocketResponse {
 
     @Expose
     private Set<ChatRoomRequest> chatRoomRequests;
+
+    @Expose
+    private ChatRoom chatRoom;
 }

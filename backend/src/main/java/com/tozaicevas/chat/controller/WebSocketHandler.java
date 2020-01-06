@@ -135,8 +135,6 @@ public class WebSocketHandler {
                                                     .map(Map.Entry::getKey)
                                                     .forEach(UtilException.rethrowConsumer(s -> s.sendMessage(allChatRoomsJson)))));
                                     sendResponseToUser(chatRoom.getCreator().getId(), getChatRooms);
-                                    //session.sendMessage(allChatRoomsJson);
-//                                    sessions.forEach(UtilException.rethrowConsumer(s -> s.sendMessage(allChatRoomsJson)));
                                     log.info(String.format("Added new message (id: %d) to chat room (id: %d)", dbMessage.getId(), request.getChatRoomId()));
                                 }));
                             }));
@@ -226,6 +224,7 @@ public class WebSocketHandler {
                             WebSocketResponse response = WebSocketResponse.builder()
                                     .responseType(WebSocketResponseType.NEW_ACCEPTED_REQUEST)
                                     .chatRooms(chatRooms)
+                                    .chatRoom(req.getChatRoom())
                                     .build();
                             sendResponseToUser(req.getUser().getId(), response);
 

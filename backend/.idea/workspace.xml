@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c3bb7a9b-0df1-4976-9d04-0ca935f1ddb1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/.expo/packager-info.json" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/.expo/packager-info.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/src/helper/WebSocketClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/src/helper/WebSocketClient.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mobile/src/screens/ChatScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../mobile/src/screens/ChatScreen.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -28,11 +36,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="313" lean-forward="true" selection-start-line="313" selection-end-line="313" />
+            <state relative-caret-position="167">
+              <caret line="254" column="72" selection-start-line="254" selection-start-column="72" selection-end-line="254" selection-end-column="72" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponseType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -154,6 +171,7 @@
       <find>participants</find>
       <find>count()</find>
       <find>disconnect</find>
+      <find>DECLINED_REQ</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -182,10 +200,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/ChatRoomRequest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketRequest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketRequestType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/User.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponseType.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/model/ChatRoom.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java" />
       </list>
     </option>
@@ -314,10 +332,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1919" />
-    <option name="y" value="-22" />
-    <option name="width" value="1442" />
-    <option name="height" value="899" />
+    <option name="x" value="1932" />
+    <option name="y" value="-9" />
+    <option name="width" value="701" />
+    <option name="height" value="873" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -479,10 +497,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2647" y="-9" width="701" height="873" extended-state="0" />
+    <frame x="1932" y="-9" width="701" height="873" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.56355286" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.56355286" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -492,7 +510,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32925585" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.276907" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.44474036" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.3288948" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -642,13 +660,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponseType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="56" selection-start-line="8" selection-start-column="56" selection-end-line="8" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketRequest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -663,16 +674,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="27" column="23" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -718,16 +719,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="14" column="18" selection-start-line="14" selection-start-column="18" selection-end-line="14" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="313" lean-forward="true" selection-start-line="313" selection-end-line="313" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -806,6 +797,33 @@
             <element signature="imports" expanded="true" />
             <element signature="e#612#613#0" expanded="true" />
             <element signature="e#674#675#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="29" selection-start-line="30" selection-start-column="29" selection-end-line="30" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/dto/WebSocketResponseType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/tozaicevas/chat/controller/WebSocketHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="254" column="72" selection-start-line="254" selection-start-column="72" selection-end-line="254" selection-end-column="72" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

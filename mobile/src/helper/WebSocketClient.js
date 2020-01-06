@@ -1,4 +1,5 @@
 import { WebSocketRequest, WebSocketResponse } from '../constants';
+import NotificationHandler from './NotificationHandler';
 
 class WebSocketClient {
   constructor(url) {
@@ -15,15 +16,22 @@ class WebSocketClient {
     this.client.onmessage = this.onResponse;
     this.client.onerror = err =>
       console.log('Error while connecting to the server: ' + err);
-
     this.client.onopen = () => {
       this.sayHello(this.user);
       this.getChatRooms();
     };
+    this.client.onclose = () => {
+      NotificationHandler.showReconnect();
+    };
   }
 
   send(req) {
-    this.client.send(JSON.stringify(req));
+    if (this.client && this.client.readyState === this.client.OPEN)
+      this.client.send(JSON.stringify(req));
+    else {
+      NotificationHandler.showReconnect();
+      this.init(this.user);
+    }
   }
 
   sayHello() {
@@ -96,7 +104,7 @@ class WebSocketClient {
     const req = {
       requestType: WebSocketRequest.GET_REQUESTS_TO_JOIN_CHAT_ROOM,
       user: this.user
-    };
+    }; /*  */
     this.send(req);
     this.log(WebSocketRequest.GET_REQUESTS_TO_JOIN_CHAT_ROOM);
   }
@@ -108,6 +116,8 @@ class WebSocketClient {
       user: this.user
     };
     this.send(req);
+    if (this.client && this.client.readyState === this.client.OPEN)
+      NotificationHandler.showRequestSent();
     this.log(WebSocketRequest.REQUEST_TO_JOIN_CHAT_ROOM);
   }
 
@@ -149,9 +159,11 @@ class WebSocketClient {
       case WebSocketResponse.NEW_REQUEST:
         if (this.onFetchedChatRoomRequests)
           this.onFetchedChatRoomRequests(data.chatRoomRequests);
+        NotificationHandler.showNewRequest();
         break;
       case WebSocketResponse.NEW_ACCEPTED_REQUEST:
         this.onFetchedChatRooms(data.chatRooms);
+        NotificationHandler.showAcceptedRequest(data.chatRoom);
         break;
       case WebSocketResponse.ALL_REQUESTS_TO_JOIN_CHAT_ROOM:
         this.onFetchedChatRoomRequests(data.chatRoomRequests);
