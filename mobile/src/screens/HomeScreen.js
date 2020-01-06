@@ -1,32 +1,31 @@
 import * as Google from 'expo-google-app-auth';
 import React from 'react';
 import { Button, StyleSheet, View } from 'react-native';
+import { googleConfig } from '../constants/Auth';
 import Colors from '../constants/Colors';
 import { SCREEN_CHAT_ROOMS } from '../constants/Screens';
+import NotificationHandler from '../helper/NotificationHandler';
 import { toGiftedChatUser } from '../helper/Parse';
 import WebSocketClient from '../helper/WebSocketClient';
 
 const HomeScreen = ({ navigation }) => {
   const login = async () => {
     try {
-      const result = await Google.logInAsync({
-        scopes: ['profile', 'email'],
-        iosClientId:
-          '1019525006370-lp164cf6hikrcjq6rj1kb5acrm8neq4k.apps.googleusercontent.com',
-        androidClientId:
-          '1019525006370-gn86jfn92alo8u4kufj58uchfm9mbupj.apps.googleusercontent.com'
-      });
+      const result = await Google.logInAsync(googleConfig);
 
       if (result.type === 'success') {
         const parsedUser = toGiftedChatUser(result.user);
-        console.log('PARSED USER:');
-        console.log(parsedUser);
         WebSocketClient.init(parsedUser);
-        navigation.navigate(SCREEN_CHAT_ROOMS, { user: parsedUser });
+        navigation.navigate(SCREEN_CHAT_ROOMS, {
+          user: parsedUser,
+          accessToken: result.accessToken
+        });
       } else {
+        NotificationHandler.showFailedGoogleAuth();
         console.log('cancelled');
       }
     } catch (e) {
+      NotificationHandler.showFailedGoogleAuth();
       console.log('error', e);
     }
   };

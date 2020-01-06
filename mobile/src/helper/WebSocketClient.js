@@ -20,9 +20,6 @@ class WebSocketClient {
       this.sayHello(this.user);
       this.getChatRooms();
     };
-    this.client.onclose = () => {
-      NotificationHandler.showReconnect();
-    };
   }
 
   send(req) {
@@ -104,7 +101,7 @@ class WebSocketClient {
     const req = {
       requestType: WebSocketRequest.GET_REQUESTS_TO_JOIN_CHAT_ROOM,
       user: this.user
-    }; /*  */
+    };
     this.send(req);
     this.log(WebSocketRequest.GET_REQUESTS_TO_JOIN_CHAT_ROOM);
   }
@@ -171,6 +168,10 @@ class WebSocketClient {
       default:
         break;
     }
+  };
+
+  close = () => {
+    this.client.close();
   };
 }
 

@@ -1,3 +1,4 @@
+import * as Google from 'expo-google-app-auth';
 import {
   Body,
   Button,
@@ -16,7 +17,9 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import Dialog from 'react-native-dialog';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SCREEN_CHAT } from '../constants/Screens';
+import { googleConfig } from '../constants/Auth';
+import { SCREEN_CHAT, SCREEN_HOME } from '../constants/Screens';
+import NotificationHandler from '../helper/NotificationHandler';
 import WebSocketClient from '../helper/WebSocketClient';
 
 const LOCKED_MESSAGE = '???';
@@ -118,8 +121,24 @@ const NewChatRoomDialog = ({ visible, setVisible, onCreateChatRoom }) => {
   );
 };
 
+const LogoutDialog = ({ visible, setVisible, onLogout }) => {
+  console.log('hey');
+  return (
+    <Dialog.Container
+      visible={visible}
+      onBackdropPress={() => setVisible(false)}
+    >
+      <Dialog.Title>Logout</Dialog.Title>
+      <Dialog.Button label="Cancel" onPress={() => setVisible(false)} />
+      <Dialog.Button label="OK" onPress={onLogout} />
+    </Dialog.Container>
+  );
+};
+
 const ChatRoomsScreen = ({ navigation }) => {
   const user = navigation.getParam('user');
+  const accessToken = navigation.getParam('accessToken');
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [isNewChatRoomCreated, setIsNewChatRoomCreated] = useState(true);
 
@@ -127,11 +146,6 @@ const ChatRoomsScreen = ({ navigation }) => {
 
   useEffect(() => {
     WebSocketClient.onFetchedChatRooms = chatRooms => {
-      /*       const [participated, locked] = chatRooms.reduce(
-        ([p, f], e) =>
-          isUserPresentInChatRoom(user, e) ? [[...p, e], f] : [p, [...f, e]],
-        [[], []]
-      ); */
       const locked = chatRooms
         .filter(room => !isUserPresentInChatRoom(user, room))
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -146,15 +160,6 @@ const ChatRoomsScreen = ({ navigation }) => {
         room => !room.lastMessage && isUserPresentInChatRoom(user, room)
       );
 
-      /*       const participatedSorted = participated.sort(
-        (a, b) =>
-          new Date(b.lastMessage ? b.lastMessage.createdAt : b.createdAt) -
-          new Date(a.lastMessage ? a.lastMessage.createdAt : a.createdAt)
-      );
-      const lockedSorted = locked.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      ); */
-
       setChatRooms([
         ...participatedWithMessages,
         ...participatedWithoutMessages,
@@ -166,6 +171,7 @@ const ChatRoomsScreen = ({ navigation }) => {
   }, [user]);
 
   const [visibleDialog, setVisibleDialog] = useState(false);
+  const [visibleLogoutDialog, setVisibleLogoutDialog] = useState(false);
 
   const onNewChatRoomPress = () => setVisibleDialog(true);
   const createNewChatRoom = title => {
@@ -188,7 +194,7 @@ const ChatRoomsScreen = ({ navigation }) => {
           <Left>
             <Thumbnail
               source={{ uri: user.avatar }}
-              style={{ width: 25, height: 25 }}
+              style={{ width: 30, height: 30 }}
             />
           </Left>
           <Body>
@@ -212,7 +218,10 @@ const ChatRoomsScreen = ({ navigation }) => {
       <Container>
         <Header>
           <Left>
-            <TouchableOpacity activeOpacity={0.4} onPress={() => {}}>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              onPress={() => setVisibleLogoutDialog(true)}
+            >
               <Thumbnail
                 source={{ uri: user.avatar }}
                 style={{ width: 30, height: 30 }}
@@ -241,6 +250,17 @@ const ChatRoomsScreen = ({ navigation }) => {
         visible={visibleDialog}
         setVisible={setVisibleDialog}
         onCreateChatRoom={createNewChatRoom}
+      />
+      <LogoutDialog
+        visible={visibleLogoutDialog}
+        setVisible={setVisibleLogoutDialog}
+        onLogout={() => {
+          setVisibleLogoutDialog(false);
+          Google.logOutAsync({ accessToken, ...googleConfig });
+          navigation.navigate(SCREEN_HOME);
+          NotificationHandler.showLogout();
+          WebSocketClient.close();
+        }}
       />
     </>
   );

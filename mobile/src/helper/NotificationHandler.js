@@ -12,7 +12,7 @@ class NotificationHandler {
   showNewRequest() {
     showMessage({
       message: 'New request',
-      description: 'Someone sent you a new request!',
+      description: 'Someone has sent you a new request!',
       type: 'info'
     });
   }
@@ -36,6 +36,21 @@ class NotificationHandler {
     showMessage({
       message: `Request accepted`,
       description: `Chat room ${chatRoom.title} is now accessible`,
+      type: 'success'
+    });
+  }
+
+  showFailedGoogleAuth() {
+    showMessage({
+      message: `Failed`,
+      description: `Failed to authenticate. Please try again`,
+      type: 'danger'
+    });
+  }
+
+  showLogout() {
+    showMessage({
+      message: `Logout successful`,
       type: 'success'
     });
   }
