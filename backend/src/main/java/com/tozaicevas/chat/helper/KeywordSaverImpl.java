@@ -27,7 +27,7 @@ public class KeywordSaverImpl implements KeywordSaver {
     }
 
     @Override
-    public void save(Message message) {
+    public synchronized void save(Message message) {
         try {
             FileReader fileReader = new FileReader(FILE_PATH);
             JsonReader jsonReader = new JsonReader(fileReader);

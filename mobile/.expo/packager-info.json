@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 13387,
-  "expoServerNgrokUrl": "https://hc-thd.anonymous.mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.hc-thd.anonymous.mobile.exp.direct",
-  "ngrokPid": 13470
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }
