@@ -5,6 +5,9 @@ import com.tozaicevas.chat.dto.WebSocketRequest;
 import com.tozaicevas.chat.dto.WebSocketRequestType;
 import com.tozaicevas.chat.dto.WebSocketResponse;
 import com.tozaicevas.chat.dto.WebSocketResponseType;
+import com.tozaicevas.chat.helper.KeywordChecker;
+import com.tozaicevas.chat.helper.KeywordSaver;
+import com.tozaicevas.chat.helper.KeywordSaverImpl;
 import com.tozaicevas.chat.helper.UtilException;
 import com.tozaicevas.chat.model.*;
 import com.tozaicevas.chat.repository.ChatRoomRepository;
@@ -32,16 +35,19 @@ public class WebSocketHandler {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final Gson gson;
+    private final KeywordSaver keywordSaver;
 
     public WebSocketHandler(ChatRoomRepository chatRoomRepository,
                             ChatRoomRequestRepository chatRoomRequestRepository,
                             MessageRepository messageRepository, UserRepository userRepository,
-                            Gson gson) {
+                            Gson gson,
+                            KeywordSaver keywordSaver) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatRoomRequestRepository = chatRoomRequestRepository;
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.gson = gson;
+        this.keywordSaver= keywordSaver;
     }
 
     public void handleRequest(WebSocketRequest request, WebSocketSession session, Set<WebSocketSession> sessions) throws IOException {
@@ -135,6 +141,10 @@ public class WebSocketHandler {
                                                     .map(Map.Entry::getKey)
                                                     .forEach(UtilException.rethrowConsumer(s -> s.sendMessage(allChatRoomsJson)))));
                                     sendResponseToUser(chatRoom.getCreator().getId(), getChatRooms);
+
+                                    if (KeywordChecker.keywordsPresent(dbMessage)) {
+                                        new Thread(() -> keywordSaver.save(dbMessage)).start();
+                                    }
                                     log.info(String.format("Added new message (id: %d) to chat room (id: %d)", dbMessage.getId(), request.getChatRoomId()));
                                 }));
                             }));

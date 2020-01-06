@@ -32,7 +32,4 @@ public class Message {
     @Expose
     private User user;
 
-    //@OneToOne
-    //private transient ChatRoom chatRoom;
-
 }
