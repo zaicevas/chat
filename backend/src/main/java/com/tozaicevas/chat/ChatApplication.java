@@ -19,30 +19,4 @@ public class ChatApplication {
 		SpringApplication.run(ChatApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner cmd(MessageRepository msgRepository, UserRepository userRepository,
-								 ChatRoomRepository chatRoomRepository, ChatRoomRequestRepository chatRoomRequestRepository) {
-		return args -> {
-/*
-			User user = User.builder()
-					.id("MYAI23123D")
-					.name("ha@gmail.com")
-					.build();
-			Message msg = Message.builder()
-					.text("message text v2")
-					.user(user)
-					.build();
-			ChatRoom room = ChatRoom.builder()
-					.creator(user)
-					.title("My chatroom")
-					.build();
-*/
-/*
-			msgRepository.deleteAll();
-			chatRoomRepository.deleteAll();
-			chatRoomRequestRepository.deleteAll();
-			userRepository.deleteAll();
-*/
-		};
-	}
 }

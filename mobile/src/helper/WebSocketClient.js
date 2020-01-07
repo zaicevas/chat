@@ -175,6 +175,6 @@ class WebSocketClient {
   };
 }
 
-const client = new WebSocketClient('ws://192.168.1.8:8080/chat');
+const client = new WebSocketClient('ws://192.168.1.170:8080/chat');
 
 export default client;
