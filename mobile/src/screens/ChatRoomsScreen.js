@@ -122,7 +122,6 @@ const NewChatRoomDialog = ({ visible, setVisible, onCreateChatRoom }) => {
 };
 
 const LogoutDialog = ({ visible, setVisible, onLogout }) => {
-  console.log('hey');
   return (
     <Dialog.Container
       visible={visible}
